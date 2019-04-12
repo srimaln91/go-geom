@@ -49,6 +49,7 @@ func init() {
 	ctxHandler = C.init_geos()
 }
 
+// GoFinishGEOS destroys the GEOS lib
 func GoFinishGEOS() {
 	C.finishGEOS_r(ctxHandler)
 }
