@@ -51,6 +51,10 @@ func createWktReader() *wktReader {
 	return r
 }
 
+func (r *wktReader) Destroy() {
+	C.GEOSWKTReader_destroy_r(ctxHandler, r.c)
+}
+
 func createWktWriter() *wktWriter {
 	c := C.GEOSWKTWriter_create_r(ctxHandler)
 	if c == nil {
@@ -65,4 +69,8 @@ func createWktWriter() *wktWriter {
 	})
 
 	return w
+}
+
+func (w *wktWriter) Destroy() {
+	C.GEOSWKTWriter_destroy_r(ctxHandler, w.c)
 }

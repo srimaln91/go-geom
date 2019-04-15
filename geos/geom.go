@@ -9,10 +9,7 @@ package geos
 #include <geos_c.h>
 */
 import "C"
-
-import (
-	"sync"
-)
+import "sync"
 
 var (
 	mu sync.Mutex
@@ -33,13 +30,16 @@ func GenerateGEOM(cGeom *C.GEOSGeometry) *Geom {
 // FromWKT creates a Geom from WKT string
 func FromWKT(wkt string) *Geom {
 	wktReader := createWktReader()
+	// defer wktReader.Destroy()
 	geom := wktReader.read(wkt)
+
 	return geom
 }
 
 // ToWKT returns a WKT string
 func (g *Geom) ToWKT() string {
 	wktWriter := createWktWriter()
+	// defer wktWriter.Destroy()
 	return wktWriter.write(g)
 }
 
@@ -48,4 +48,9 @@ func (g *Geom) Buffer(width float32) {
 	mu.Lock()
 	defer mu.Unlock()
 	g.cGeom = C.GEOSBuffer_r(ctxHandler, g.cGeom, C.double(width), C.int(8))
+}
+
+// Destroy releases the memory allocated to GEOM
+func (g *Geom) Destroy() {
+	C.GEOSGeom_destroy_r(ctxHandler, g.cGeom)
 }
