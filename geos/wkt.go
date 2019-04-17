@@ -1,9 +1,5 @@
 package geos
 
-import (
-	"unsafe"
-)
-
 /*
 #cgo CFLAGS: -I/usr/local/include
 #cgo LDFLAGS: -L/usr/local/lib -lgeos_c
@@ -11,6 +7,10 @@ import (
 #include <stdlib.h>
 */
 import "C"
+
+import (
+	"unsafe"
+)
 
 type wktReader struct {
 	c *C.GEOSWKTReader
