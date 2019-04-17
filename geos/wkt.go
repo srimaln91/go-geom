@@ -1,7 +1,6 @@
 package geos
 
 import (
-	"runtime"
 	"unsafe"
 )
 
@@ -25,17 +24,21 @@ func (r *wktReader) read(wkt string) *Geom {
 	cs := C.CString(wkt)
 	defer C.free(unsafe.Pointer(cs))
 
-	c := C.GEOSWKTReader_read_r(ctxHandler, r.c, cs)
-	return GenerateGEOM(c)
+	cGeom := C.GEOSWKTReader_read_r(ctxHandler, r.c, cs)
+	return GenerateGEOM(cGeom)
 }
 
 func (w *wktWriter) write(g *Geom) string {
-	dims := C.GEOSGeom_getCoordinateDimension_r(ctxHandler, g.cGeom)
-	C.GEOSWKTWriter_setOutputDimension_r(ctxHandler, w.c, dims)
+
+	//Set output dimention (2 or 3)
+	outputDimention := C.GEOSGeom_getCoordinateDimension_r(ctxHandler, g.cGeom)
+	C.GEOSWKTWriter_setOutputDimension_r(ctxHandler, w.c, outputDimention)
+
 	return C.GoString(C.GEOSWKTWriter_write_r(ctxHandler, w.c, g.cGeom))
 }
 
 func createWktReader() *wktReader {
+
 	c := C.GEOSWKTReader_create_r(ctxHandler)
 	if c == nil {
 		return nil
@@ -44,14 +47,15 @@ func createWktReader() *wktReader {
 	r := &wktReader{c: c}
 
 	// Instruct Go garbage collector to clean C memory blocks
-	runtime.SetFinalizer(r, func(r *wktReader) {
-		C.GEOSWKTReader_destroy_r(ctxHandler, r.c)
-	})
+	// runtime.SetFinalizer(r, func(r *wktReader) {
+	// 	C.GEOSWKTReader_destroy_r(ctxHandler, r.c)
+	// })
 
 	return r
 }
 
-func (r *wktReader) Destroy() {
+// Destroy releases the memory allocated to WKT reader
+func (r *wktReader) destroy() {
 	C.GEOSWKTReader_destroy_r(ctxHandler, r.c)
 }
 
@@ -64,13 +68,14 @@ func createWktWriter() *wktWriter {
 	w := &wktWriter{c: c}
 
 	// Instruct Go garbage collector to clean C memory blocks
-	runtime.SetFinalizer(w, func(w *wktWriter) {
-		C.GEOSWKTWriter_destroy_r(ctxHandler, w.c)
-	})
+	// runtime.SetFinalizer(w, func(w *wktWriter) {
+	// 	C.GEOSWKTWriter_destroy_r(ctxHandler, w.c)
+	// })
 
 	return w
 }
 
-func (w *wktWriter) Destroy() {
+// Destroy releases the memory allocated to WKT writer
+func (w *wktWriter) destroy() {
 	C.GEOSWKTWriter_destroy_r(ctxHandler, w.c)
 }

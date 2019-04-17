@@ -3,19 +3,11 @@ package geos
 /*
 #cgo CFLAGS: -g -Wall -I/usr/local/include -I/usr/include
 #cgo LDFLAGS: -L/usr/local/lib -L/usr/lib -lgeos_c
-#include <stdlib.h>
-#include <stdarg.h>
-#include <stdio.h>
 #include <geos_c.h>
 */
 import "C"
-import "sync"
 
-var (
-	mu sync.Mutex
-)
-
-// Geom base type for the geometric operations
+// Geom base type for geometric operations
 type Geom struct {
 	cGeom *C.GEOSGeometry
 }
@@ -29,8 +21,10 @@ func GenerateGEOM(cGeom *C.GEOSGeometry) *Geom {
 
 // FromWKT creates a Geom from WKT string
 func FromWKT(wkt string) *Geom {
+
 	wktReader := createWktReader()
-	// defer wktReader.Destroy()
+	defer wktReader.destroy()
+
 	geom := wktReader.read(wkt)
 
 	return geom
@@ -38,15 +32,16 @@ func FromWKT(wkt string) *Geom {
 
 // ToWKT returns a WKT string
 func (g *Geom) ToWKT() string {
+
 	wktWriter := createWktWriter()
-	// defer wktWriter.Destroy()
-	return wktWriter.write(g)
+	defer wktWriter.destroy()
+
+	wkt := wktWriter.write(g)
+	return wkt
 }
 
-//Buffer creates a buffer around the geometry
+// Buffer creates a buffer around the geometry
 func (g *Geom) Buffer(width float32) {
-	mu.Lock()
-	defer mu.Unlock()
 	g.cGeom = C.GEOSBuffer_r(ctxHandler, g.cGeom, C.double(width), C.int(8))
 }
 
