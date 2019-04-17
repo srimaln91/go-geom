@@ -1,2 +1,5 @@
 Todo
 01. Rewamp WKT reader/ writer interfaces
+    - Found a memory leak in wkt reader/writer. Will have to fix that.
+02. Implement GeoJson reader/writer
+    -   Should be able to generate geometries from GeoJson.
