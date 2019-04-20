@@ -36,6 +36,17 @@ func TestToWKT(t *testing.T) {
 	}
 }
 
+func TestSRID(t *testing.T) {
+	wkt := "POINT (0 0)"
+	geom := FromWKT(wkt)
+	geom.SetSRID(4326)
+	srid := geom.GetSRID()
+
+	if srid != 4326 {
+		t.Errorf("Error: ToWKT(%s) error", wkt)
+	}
+}
+
 func BenchmarkBuffer(b *testing.B) {
 	b.ReportAllocs()
 	b.RunParallel(func(pb *testing.PB) {
