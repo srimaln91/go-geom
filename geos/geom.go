@@ -47,12 +47,18 @@ func (g *Geom) SetSRID(srid int) {
 
 // GetSRID returns the SRID of the geometry
 func (g *Geom) GetSRID() int {
+
 	srid := C.GEOSGetSRID_r(ctxHandler, g.cGeom)
+
 	return int(srid)
 }
 
 // Buffer creates a buffer around the geometry
 func (g *Geom) Buffer(width float32) {
+
+	//Destroy old geom
+	defer C.GEOSGeom_destroy_r(ctxHandler, g.cGeom)
+
 	g.cGeom = C.GEOSBuffer_r(ctxHandler, g.cGeom, C.double(width), C.int(8))
 }
 
