@@ -9,6 +9,9 @@
 
 #include <geos_c.h>
 
+#ifndef GEOS_INIT
+#define GEOS_INIT
+
 void notice(const char *fmt, ...);
 
 void log_and_exit(const char *fmt, ...);
@@ -16,3 +19,5 @@ void log_and_exit(const char *fmt, ...);
 GEOSContextHandle_t ctx;
 
 GEOSContextHandle_t init_geos();
+
+#endif
