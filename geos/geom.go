@@ -66,3 +66,30 @@ func (g *Geom) Buffer(width float32) {
 func (g *Geom) Destroy() {
 	C.GEOSGeom_destroy_r(ctxHandler, g.cGeom)
 }
+
+// Simplify simplifies the geometry with given tolerance
+func (g *Geom) Simplify(tolerance float32) {
+
+	//Destroy old geom
+	defer C.GEOSGeom_destroy_r(ctxHandler, g.cGeom)
+
+	g.cGeom = C.GEOSSimplify_r(ctxHandler, g.cGeom, C.double(tolerance))
+}
+
+// SimplifyPreserveTopology simplifies the geometry and will avoid creating derived geometries (polygons in particular) that are invalid.
+func (g *Geom) SimplifyPreserveTopology(tolerance float32) {
+
+	//Destroy old geom
+	defer C.GEOSGeom_destroy_r(ctxHandler, g.cGeom)
+
+	g.cGeom = C.GEOSTopologyPreserveSimplify_r(ctxHandler, g.cGeom, C.double(tolerance))
+}
+
+// Reverse reverses the geom
+func (g *Geom) Reverse() {
+
+	//Destroy old geom
+	defer C.GEOSGeom_destroy_r(ctxHandler, g.cGeom)
+
+	g.cGeom = C.GEOSReverse_r(ctxHandler, g.cGeom)
+}
