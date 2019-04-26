@@ -98,3 +98,9 @@ func (g *Geom) Union(g1 *Geom) *Geom {
 	union := C.GEOSUnion_r(ctxHandler, g.cGeom, g1.cGeom)
 	return GenerateGEOM(union)
 }
+
+// Intersection retuerns the intersection of 2 geometries
+func (g *Geom) Intersection(g1 *Geom) *Geom {
+	intersection := C.GEOSIntersection_r(ctxHandler, g.cGeom, g1.cGeom)
+	return GenerateGEOM(intersection)
+}
