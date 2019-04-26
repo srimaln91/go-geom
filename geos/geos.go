@@ -17,3 +17,9 @@ func init() {
 func GoFinishGEOS() {
 	C.finishGEOS_r(ctxHandler)
 }
+
+// Version returns the GEOS version
+func Version() string {
+	version := C.GEOSversion()
+	return C.GoString(version)
+}

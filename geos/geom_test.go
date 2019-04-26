@@ -1,6 +1,7 @@
 package geos
 
 import (
+	"regexp"
 	"testing"
 )
 
@@ -100,4 +101,58 @@ func TestReverse(t *testing.T) {
 	if resultWKT != "LINESTRING (40.0000000000000000 40.0000000000000000, 10.0000000000000000 30.0000000000000000, 30.0000000000000000 10.0000000000000000)" {
 		t.Errorf("Error: ToWKT(%s) error", resultWKT)
 	}
+}
+
+func TestVersion(t *testing.T) {
+	version := Version()
+
+	matched, err := regexp.MatchString(`^3\.\d+\.\d+-CAPI-\d+\.\d+\.\d+.+$`, version)
+
+	if err != nil {
+		t.Errorf("Error: Version fetch error, %s", err)
+	}
+
+	if !matched {
+		t.Errorf("Error: Version %s is invalid", version)
+	}
+}
+
+func TestUnion(t *testing.T) {
+
+	geom1 := FromWKT("LINESTRING(79.856178 6.911853, 79.856382 6.911449, 79.856645 6.910948)")
+	geom2 := FromWKT("LINESTRING(79.856178 6.911853, 79.856382 6.911449, 79.856645 6.910948)")
+
+	union := geom1.Union(geom2)
+
+	resultWKT := union.ToWKT()
+	expectedWKT := "MULTILINESTRING ((79.8561779999999999 6.9118529999999998, 79.8563819999999964 6.9114490000000002), (79.8563819999999964 6.9114490000000002, 79.8566450000000003 6.9109480000000003))"
+
+	if resultWKT != expectedWKT {
+		t.Errorf("Error: Invalid Buffer %s", resultWKT)
+	}
+
+	//Cleanup
+	geom1.Destroy()
+	geom2.Destroy()
+	union.Destroy()
+}
+
+func TestIntersection(t *testing.T) {
+
+	geom1 := FromWKT("POLYGON((79.856178 6.911853,79.85598771527475 6.911267935124347,79.85636717179295 6.911461947090437,79.856178 6.911853))")
+	geom2 := FromWKT("POLYGON((79.85599371221633 6.911822745245366,79.85623376992316 6.911505881917993,79.85612245824905 6.911199669256946,79.85599371221633 6.911822745245366))")
+
+	intersection := geom1.Intersection(geom2)
+
+	resultWKT := intersection.ToWKT()
+	expectedWKT := "POLYGON ((79.8560614850391488 6.9114947536352744, 79.8561157638370389 6.9116616436370890, 79.8562337699231648 6.9115058819179929, 79.8561836990276532 6.9113681394729278, 79.8560968252871675 6.9113237218799171, 79.8560614850391488 6.9114947536352744))"
+
+	if resultWKT != expectedWKT {
+		t.Errorf("Error: Invalid Intersection %s", resultWKT)
+	}
+
+	//Cleanup
+	geom1.Destroy()
+	geom2.Destroy()
+	intersection.Destroy()
 }
