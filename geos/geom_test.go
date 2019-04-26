@@ -1,6 +1,7 @@
 package geos
 
 import (
+	"regexp"
 	"testing"
 )
 
@@ -100,4 +101,38 @@ func TestReverse(t *testing.T) {
 	if resultWKT != "LINESTRING (40.0000000000000000 40.0000000000000000, 10.0000000000000000 30.0000000000000000, 30.0000000000000000 10.0000000000000000)" {
 		t.Errorf("Error: ToWKT(%s) error", resultWKT)
 	}
+}
+
+func TestVersion(t *testing.T) {
+	version := Version()
+
+	matched, err := regexp.MatchString(`^3\.\d+\.\d+-CAPI-\d+\.\d+\.\d+.+$`, version)
+
+	if err != nil {
+		t.Errorf("Error: Version fetch error, %s", err)
+	}
+
+	if !matched {
+		t.Errorf("Error: Version %s is invalid", version)
+	}
+}
+
+func TestUnion(t *testing.T) {
+
+	geom1 := FromWKT("LINESTRING(79.856178 6.911853, 79.856382 6.911449, 79.856645 6.910948)")
+	geom2 := FromWKT("LINESTRING(79.856178 6.911853, 79.856382 6.911449, 79.856645 6.910948)")
+
+	union := geom1.Union(geom2)
+
+	resultWKT := union.ToWKT()
+	expectedWKT := "MULTILINESTRING ((79.8561779999999999 6.9118529999999998, 79.8563819999999964 6.9114490000000002), (79.8563819999999964 6.9114490000000002, 79.8566450000000003 6.9109480000000003))"
+
+	if resultWKT != expectedWKT {
+		t.Errorf("Error: Invalid Buffer %s", resultWKT)
+	}
+
+	//Cleanup
+	geom1.Destroy()
+	geom2.Destroy()
+	union.Destroy()
 }

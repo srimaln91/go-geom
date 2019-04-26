@@ -4,3 +4,4 @@ Todo
 02. Implement GeoJson reader/writer
     -   Should be able to generate geometries from GeoJson.
 03. Implement intersects
+04. Implement a feature to get number of points in a given geometry

@@ -91,3 +91,10 @@ func (g *Geom) Reverse() {
 
 	g.cGeom = C.GEOSReverse_r(ctxHandler, g.cGeom)
 }
+
+// Union returns the union of two geometries
+func (g *Geom) Union(g1 *Geom) *Geom {
+
+	union := C.GEOSUnion_r(ctxHandler, g.cGeom, g1.cGeom)
+	return GenerateGEOM(union)
+}
