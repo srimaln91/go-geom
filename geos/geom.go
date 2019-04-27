@@ -99,8 +99,20 @@ func (g *Geom) Union(g1 *Geom) *Geom {
 	return GenerateGEOM(union)
 }
 
-// Intersection retuerns the intersection of 2 geometries
+// Intersection returns the intersection of 2 geometries
 func (g *Geom) Intersection(g1 *Geom) *Geom {
 	intersection := C.GEOSIntersection_r(ctxHandler, g.cGeom, g1.cGeom)
 	return GenerateGEOM(intersection)
+}
+
+// Intersects checks whether the geom intersects with an another geom
+func (g *Geom) Intersects(g1 *Geom) bool {
+
+	intersects := C.GEOSIntersects_r(ctxHandler, g.cGeom, g1.cGeom)
+
+	if C.int(intersects) == 1 {
+		return true
+	}
+
+	return false
 }
