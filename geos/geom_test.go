@@ -156,3 +156,18 @@ func TestIntersection(t *testing.T) {
 	geom2.Destroy()
 	intersection.Destroy()
 }
+
+func TestIntersects(t *testing.T) {
+	geom1 := FromWKT("POLYGON((79.856178 6.911853,79.85598771527475 6.911267935124347,79.85636717179295 6.911461947090437,79.856178 6.911853))")
+	geom2 := FromWKT("POLYGON((79.85599371221633 6.911822745245366,79.85623376992316 6.911505881917993,79.85612245824905 6.911199669256946,79.85599371221633 6.911822745245366))")
+
+	intersects := geom1.Intersects(geom2)
+
+	if intersects == false {
+		t.Errorf("Error: Intersects")
+	}
+
+	//Cleanup
+	geom1.Destroy()
+	geom2.Destroy()
+}
