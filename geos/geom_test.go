@@ -223,7 +223,7 @@ func TestWithin(t *testing.T) {
 
 	geom1 := FromWKT("POLYGON((20 15,23 11,26 16,20 15))")
 	geom2 := FromWKT("POLYGON((8 52,21 50,11 46,8 52))")
-	geom3 := FromWKT("POLYGON((10 10,25.703125 7,40 10,33 19,24 26,15 20,10 10))")
+	geom3 := FromWKT("POLYGON((10 10,25 7,40 10,33 19,24 26,15 20,10 10))")
 
 	disjoint, _ := geom1.Within(geom3)
 
@@ -239,4 +239,45 @@ func TestWithin(t *testing.T) {
 
 	//Cleanup
 	cleanup(geom1, geom2, geom3)
+}
+
+func TestContains(t *testing.T) {
+
+	geom1 := FromWKT("POLYGON((20 15,23 11,26 16,20 15))")
+	geom2 := FromWKT("POLYGON((8 52,21 50,11 46,8 52))")
+	geom3 := FromWKT("POLYGON((10 10,25 7,40 10,33 19,24 26,15 20,10 10))")
+
+	contains, _ := geom3.Contains(geom1)
+
+	if contains == false {
+		t.Errorf("Error: Contains")
+	}
+
+	contains, _ = geom3.Contains(geom2)
+
+	if contains == true {
+		t.Errorf("Error: Contains")
+	}
+
+	//Cleanup
+	cleanup(geom1, geom2, geom3)
+}
+
+func TestOverlaps(t *testing.T) {
+	geom1 := FromWKT("POLYGON((17 19,28 19,28 8,17 8,17 19))")
+	geom2 := FromWKT("POLYGON((24 22,41 22,41 8,24 8,24 22))")
+	geom3 := FromWKT("POLYGON((57 31,61 31,61 26,57 26,57 31))")
+
+	isOVerlaps, _ := geom1.Overlaps(geom2)
+
+	if isOVerlaps == false {
+		t.Errorf("Error: Overlaps")
+	}
+
+	isOVerlaps, _ = geom3.Overlaps(geom1)
+
+	if isOVerlaps == true {
+		t.Errorf("Error: Overlaps")
+	}
+
 }
