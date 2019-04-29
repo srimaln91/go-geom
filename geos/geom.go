@@ -65,7 +65,7 @@ func (g *Geom) Destroy() {
 	C.GEOSGeom_destroy_r(ctxHandler, g.cGeom)
 }
 
-// Simplify simplifies the geometry with given tolerance
+// Simplify simplifies the geometry with a given tolerance
 func (g *Geom) Simplify(tolerance float32) {
 
 	//Destroy old geom
@@ -74,7 +74,10 @@ func (g *Geom) Simplify(tolerance float32) {
 	g.cGeom = C.GEOSSimplify_r(ctxHandler, g.cGeom, C.double(tolerance))
 }
 
-// SimplifyPreserveTopology simplifies the geometry and will avoid creating derived geometries (polygons in particular) that are invalid.
+/*
+SimplifyPreserveTopology simplifies the geometry and will avoid creating derived
+geometries (polygons in particular) that are invalid.
+*/
 func (g *Geom) SimplifyPreserveTopology(tolerance float32) {
 
 	//Destroy old geom
@@ -111,8 +114,11 @@ func (g *Geom) Intersects(g1 *Geom) (bool, error) {
 	return geosBoolResult(intersects)
 }
 
-// Disjoints Overlaps, Touches, Within all imply geometries are not spatially disjoint.
-// If any of the aforementioned returns true, then the geometries are not spatially disjoint. Disjoint implies false for spatial intersection.
+/*
+Disjoints Overlaps, Touches, Within all imply geometries are not spatially disjoint.
+If any of the aforementioned returns true, then the geometries are not spatially disjoint.
+Disjoint implies false for spatial intersection.
+*/
 func (g *Geom) Disjoints(g1 *Geom) (bool, error) {
 	disjoint := C.GEOSDisjoint_r(ctxHandler, g.cGeom, g1.cGeom)
 	return geosBoolResult(disjoint)
@@ -128,4 +134,74 @@ func (g *Geom) Touches(g1 *Geom) (bool, error) {
 func (g *Geom) Within(g1 *Geom) (bool, error) {
 	within := C.GEOSWithin_r(ctxHandler, g.cGeom, g1.cGeom)
 	return geosBoolResult(within)
+}
+
+// Contains returns TRUE if geometry B is completely inside geometry A.
+func (g *Geom) Contains(g1 *Geom) (bool, error) {
+	contains := C.GEOSContains_r(ctxHandler, g.cGeom, g1.cGeom)
+	return geosBoolResult(contains)
+}
+
+// Overlaps returns TRUE if geometry B is completely inside geometry A.
+func (g *Geom) Overlaps(g1 *Geom) (bool, error) {
+	overlaps := C.GEOSOverlaps_r(ctxHandler, g.cGeom, g1.cGeom)
+	return geosBoolResult(overlaps)
+}
+
+/*
+Equals returns TRUE if the given Geometries are "spatially equal".
+
+Use this for a 'better' answer than '='. Note by spatially equal we mean
+ST_Within(A,B) = true and ST_Within(B,A) = true and also mean ordering of
+points can be different but represent the same geometry structure.
+*/
+func (g *Geom) Equals(g1 *Geom) (bool, error) {
+	eq := C.GEOSEquals_r(ctxHandler, g.cGeom, g1.cGeom)
+	return geosBoolResult(eq)
+}
+
+// EqualsExact returns true if the two Geometrys are of the same type and their
+// vertices corresponding by index are equal up to a specified tolerance.
+func (g *Geom) EqualsExact(g1 *Geom, tolerance float32) (bool, error) {
+	eqExact := C.GEOSEqualsExact_r(ctxHandler, g.cGeom, g1.cGeom, C.double(tolerance))
+	return geosBoolResult(eqExact)
+}
+
+/*
+Covers returns true if this geometry covers the specified geometry.
+
+The covers predicate has the following equivalent definitions:
+
+    Every point of the other geometry is a point of this geometry.
+    The DE-9IM Intersection Matrix for the two geometries is T*****FF* or *T****FF* or ***T**FF* or ****T*FF*
+    g.coveredBy(this) (covers is the inverse of coveredBy)
+
+If either geometry is empty, the value of this predicate is false.
+
+This predicate is similar to contains, but is more inclusive (i.e. returns true for more cases).
+In particular, unlike contains it does not distinguish between points in the boundary and in the
+interior of geometries. For most situations, covers should be used in preference to contains.
+As an added benefit, covers is more amenable to optimization, and hence should be more performant.
+*/
+func (g *Geom) Covers(g1 *Geom) (bool, error) {
+	covers := C.GEOSCovers_r(ctxHandler, g.cGeom, g1.cGeom)
+	return geosBoolResult(covers)
+}
+
+/*
+CoveredBy tests whether this geometry is covered by the specified geometry.
+
+The coveredBy predicate has the following equivalent definitions:
+
+    Every point of this geometry is a point of the other geometry.
+    The DE-9IM Intersection Matrix for the two geometries matches [T*F**F***] or [*TF**F***] or [**FT*F***] or [**F*TF***]
+    g.covers(this) (coveredBy is the converse of covers)
+
+If either geometry is empty, the value of this predicate is false.
+
+This predicate is similar to within, but is more inclusive (i.e. returns true for more cases).
+*/
+func (g *Geom) CoveredBy(g1 *Geom) (bool, error) {
+	coverdBy := C.GEOSCoveredBy_r(ctxHandler, g.cGeom, g1.cGeom)
+	return geosBoolResult(coverdBy)
 }
