@@ -206,13 +206,13 @@ func TestTouches(t *testing.T) {
 	touches, _ := geom1.Touches(geom3)
 
 	if touches == true {
-		t.Errorf("Error: Disjoint")
+		t.Errorf("Error: Touches")
 	}
 
 	touches, _ = geom2.Touches(geom4)
 
 	if touches == false {
-		t.Errorf("Error: Disjoint")
+		t.Errorf("Error: Touches")
 	}
 
 	//Cleanup
@@ -228,13 +228,13 @@ func TestWithin(t *testing.T) {
 	disjoint, _ := geom1.Within(geom3)
 
 	if disjoint == false {
-		t.Errorf("Error: Disjoint")
+		t.Errorf("Error: Within")
 	}
 
 	disjoint, _ = geom2.Within(geom3)
 
 	if disjoint == true {
-		t.Errorf("Error: Disjoint")
+		t.Errorf("Error: Within")
 	}
 
 	//Cleanup
