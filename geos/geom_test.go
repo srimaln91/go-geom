@@ -161,7 +161,7 @@ func TestIntersects(t *testing.T) {
 	geom1 := FromWKT("POLYGON((79.856178 6.911853,79.85598771527475 6.911267935124347,79.85636717179295 6.911461947090437,79.856178 6.911853))")
 	geom2 := FromWKT("POLYGON((79.85599371221633 6.911822745245366,79.85623376992316 6.911505881917993,79.85612245824905 6.911199669256946,79.85599371221633 6.911822745245366))")
 
-	intersects := geom1.Intersects(geom2)
+	intersects, _ := geom1.Intersects(geom2)
 
 	if intersects == false {
 		t.Errorf("Error: Intersects")
@@ -170,4 +170,28 @@ func TestIntersects(t *testing.T) {
 	//Cleanup
 	geom1.Destroy()
 	geom2.Destroy()
+}
+
+func TestDisjoint(t *testing.T) {
+
+	geom1 := FromWKT("POINT(0 0)")
+	geom2 := FromWKT("LINESTRING ( 2 0, 0 2 )")
+	geom3 := FromWKT("LINESTRING ( 0 0, 0 2 )")
+
+	disjoint, _ := geom1.Disjoints(geom2)
+
+	if disjoint == false {
+		t.Errorf("Error: Disjoint")
+	}
+
+	disjoint, _ = geom1.Disjoints(geom3)
+
+	if disjoint == true {
+		t.Errorf("Error: Disjoint")
+	}
+
+	//Cleanup
+	geom1.Destroy()
+	geom2.Destroy()
+	geom3.Destroy()
 }
