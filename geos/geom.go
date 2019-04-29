@@ -10,7 +10,7 @@ type Geom struct {
 	cGeom *C.GEOSGeometry
 }
 
-// GenerateGEOM generates a new go geom
+// GenerateGEOM generates a new go geom that wraps libgeos GEOSGeometry type
 func GenerateGEOM(cGeom *C.GEOSGeometry) *Geom {
 	return &Geom{
 		cGeom: cGeom,
@@ -106,13 +106,14 @@ func (g *Geom) Intersection(g1 *Geom) *Geom {
 }
 
 // Intersects checks whether the geom intersects with an another geom
-func (g *Geom) Intersects(g1 *Geom) bool {
-
+func (g *Geom) Intersects(g1 *Geom) (bool, error) {
 	intersects := C.GEOSIntersects_r(ctxHandler, g.cGeom, g1.cGeom)
+	return geosBoolResult(intersects)
+}
 
-	if C.int(intersects) == 1 {
-		return true
-	}
-
-	return false
+// Disjoints Overlaps, Touches, Within all imply geometries are not spatially disjoint.
+// If any of the aforementioned returns true, then the geometries are not spatially disjoint. Disjoint implies false for spatial intersection.
+func (g *Geom) Disjoints(g1 *Geom) (bool, error) {
+	disjoint := C.GEOSDisjoint_r(ctxHandler, g.cGeom, g1.cGeom)
+	return geosBoolResult(disjoint)
 }
