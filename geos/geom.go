@@ -117,3 +117,15 @@ func (g *Geom) Disjoints(g1 *Geom) (bool, error) {
 	disjoint := C.GEOSDisjoint_r(ctxHandler, g.cGeom, g1.cGeom)
 	return geosBoolResult(disjoint)
 }
+
+// Touches returns TRUE if the only points in common between g1 and g2 lie in the union of the boundaries of g1 and g2.
+func (g *Geom) Touches(g1 *Geom) (bool, error) {
+	touches := C.GEOSTouches_r(ctxHandler, g.cGeom, g1.cGeom)
+	return geosBoolResult(touches)
+}
+
+// Within returns TRUE if geometry A is completely inside geometry B
+func (g *Geom) Within(g1 *Geom) (bool, error) {
+	within := C.GEOSWithin_r(ctxHandler, g.cGeom, g1.cGeom)
+	return geosBoolResult(within)
+}
