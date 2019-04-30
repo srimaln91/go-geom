@@ -4,18 +4,11 @@ go:
   - 1.1
 
 dist: xenial
-addons:
-  apt:
-    sources:
-      - ppa:ubuntugis/ubuntugis-unstable
-    packages:
-    - libgeos-3.7.0
-    - libgeos-dev
 
-# before_install:
-#   - sudo add-apt-repository -y ppa:ubuntugis/ubuntugis-unstable
-#   - sudo apt-get --yes --force-yes update -qq
-#   - sudo apt install -q libgeos-dev libgeos-3.7.0
+before_install:
+  - sudo add-apt-repository -y ppa:ubuntugis/ubuntugis-unstable
+  - sudo apt-get --yes --force-yes update -qq
+  - sudo apt install -q libgeos-dev libgeos-3.7.0
 
 script: go test -v ./...
 notifications:
