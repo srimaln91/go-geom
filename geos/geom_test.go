@@ -285,25 +285,33 @@ func TestOverlaps(t *testing.T) {
 }
 
 func TestEquals(t *testing.T) {
-	geom1 := FromWKT("POLYGON((17 19,28 19,28 8,17 8,17 19))")
-	geom2 := FromWKT("POLYGON((24 22,41 22,41 8,24 8,24 22))")
+	geom1 := FromWKT("POLYGON((27 19,38 19,38 9,27 9,27 19))")
+	geom2 := FromWKT("POLYGON((27 19,38 19,38 9,27 9,27 19))")
+	geom3 := FromWKT("POLYGON((26 21,41 18,40 6,25 8,26 21))")
 
 	isequal, _ := geom1.Equals(geom2)
 
-	if isequal == true {
+	if !isequal {
 		t.Errorf("Error: Equals")
 	}
 
-	cleanup(geom1, geom2)
+	isequal, _ = geom1.Equals(geom3)
+
+	if isequal {
+		t.Errorf("Error: Equals")
+	}
+
+	cleanup(geom1, geom2, geom3)
 }
 
 func TestEqualsExact(t *testing.T) {
-	geom1 := FromWKT("POLYGON((17 19,28 19,28 8,17 8,17 19))")
-	geom2 := FromWKT("LINESTRING((24 22,41 22,41 8,24 8,24 22))")
+	geom1 := FromWKT("LINESTRING(0 0, 1 1, 0 2)")
+	geom2 := FromWKT("LINESTRING(0 0, 1 1.001, 0 2)")
+	// geom3 := FromWKT("POLYGON((26 21,41 18,40 6,25 8,26 21))")
 
 	isEqualEx, _ := geom1.EqualsExact(geom2, 0.01)
 
-	if isEqualEx == false {
+	if !isEqualEx {
 		t.Errorf("Error: Equals")
 	}
 }
