@@ -11,4 +11,4 @@ before_install:
 script: go test -v ./...
 notifications:
   email:
-- srimaln91@gmail.com
+    - srimaln91@gmail.com
