@@ -4,7 +4,7 @@ go:
   - 1.1
 
 before_install:
-  - sudo apt-add-repository -y ppa:ubuntugis/ubuntugis-unstable
+  - sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable
   - sudo apt update
   - sudo apt install -q libgeos-dev libgeos-3.7.0
 
