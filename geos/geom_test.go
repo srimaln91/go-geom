@@ -280,4 +280,41 @@ func TestOverlaps(t *testing.T) {
 		t.Errorf("Error: Overlaps")
 	}
 
+	//Cleanup
+	cleanup(geom1, geom2, geom3)
+}
+
+func TestEquals(t *testing.T) {
+	geom1 := FromWKT("POLYGON((17 19,28 19,28 8,17 8,17 19))")
+	geom2 := FromWKT("POLYGON((24 22,41 22,41 8,24 8,24 22))")
+
+	isequal, _ := geom1.Equals(geom2)
+
+	if isequal == true {
+		t.Errorf("Error: Equals")
+	}
+
+	cleanup(geom1, geom2)
+}
+
+func TestEqualsExact(t *testing.T) {
+	geom1 := FromWKT("POLYGON((17 19,28 19,28 8,17 8,17 19))")
+	geom2 := FromWKT("LINESTRING((24 22,41 22,41 8,24 8,24 22))")
+
+	isEqualEx, _ := geom1.EqualsExact(geom2, 0.01)
+
+	if isEqualEx == false {
+		t.Errorf("Error: Equals")
+	}
+}
+
+func TestCreatePoint(t *testing.T) {
+	geom1 := CreatePoint(10, 30)
+	geom2 := FromWKT("POINT(10 30)")
+
+	if geom1.ToWKT() != geom2.ToWKT() {
+		t.Errorf("Error: CreatePoint")
+	}
+
+	cleanup(geom1, geom2)
 }
