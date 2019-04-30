@@ -1,8 +1,12 @@
 Todo
-01. Rewamp WKT reader/ writer interfaces
-    - Found a memory leak in wkt reader/writer. Will have to fix that.
+01. Rewamp WKT reader/ writer interfaces - Done
+    - Found a memory leak in wkt reader/writer. Will have to fix that. - Done
 02. Implement GeoJson reader/writer
     -   Should be able to generate geometries from GeoJson.
 03. Implement intersects - Done
-04. Implement a feature to get number of points in a given geometry
-05. Write tests for Equals, EqualsExact, Covers, CoveredBy
+04. Implement a feature to get number of points in a given geometry - Done
+05. Write tests for Equals, EqualsExact, Covers, CoveredBy - Done
+
+
+06. Wrap GEOS coords enums. So we will be able to use coords to build geometries.
+07. Implement BufferWithOptions() method
