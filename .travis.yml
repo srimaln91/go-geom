@@ -8,7 +8,7 @@ dist: xenial
 before_install:
   - sudo add-apt-repository -y ppa:ubuntugis/ubuntugis-unstable
   - sudo apt-get --yes --force-yes update
-  - sudo apt install -q libgeos-dev libgeos-3.7.0
+  - sudo apt install -y libgeos-dev
 
 script: go test -v ./...
 notifications:
