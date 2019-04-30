@@ -17,6 +17,18 @@ func GenerateGEOM(cGeom *C.GEOSGeometry) *Geom {
 	}
 }
 
+// CreatePoint create geometry point
+func CreatePoint(x float64, y float64) *Geom {
+
+	coordSeq, _ := initCoordSeq(1, 2)
+	// defer coordSeq.Destroy()
+
+	coordSeq.SetX(0, x)
+	coordSeq.SetY(0, y)
+
+	return GenerateGEOM(C.GEOSGeom_createPoint_r(ctxHandler, coordSeq.CSeq))
+}
+
 // FromWKT creates a Geom from WKT string
 func FromWKT(wkt string) *Geom {
 
@@ -149,11 +161,12 @@ func (g *Geom) Overlaps(g1 *Geom) (bool, error) {
 }
 
 /*
-Equals returns TRUE if the given Geometries are "spatially equal".
+Equals returns true if the DE-9IM intersection matrix for the two Geometrys is T*F**FFF*.
 
-Use this for a 'better' answer than '='. Note by spatially equal we mean
-ST_Within(A,B) = true and ST_Within(B,A) = true and also mean ordering of
-points can be different but represent the same geometry structure.
+a and b are topologically equal. "Two geometries are topologically equal if their interiors
+intersect and no part of the interior or boundary of one geometry intersects the exterior of the other".[9]
+
+equals to Within & Contains
 */
 func (g *Geom) Equals(g1 *Geom) (bool, error) {
 	eq := C.GEOSEquals_r(ctxHandler, g.cGeom, g1.cGeom)
@@ -162,7 +175,7 @@ func (g *Geom) Equals(g1 *Geom) (bool, error) {
 
 // EqualsExact returns true if the two Geometrys are of the same type and their
 // vertices corresponding by index are equal up to a specified tolerance.
-func (g *Geom) EqualsExact(g1 *Geom, tolerance float32) (bool, error) {
+func (g *Geom) EqualsExact(g1 *Geom, tolerance float64) (bool, error) {
 	eqExact := C.GEOSEqualsExact_r(ctxHandler, g.cGeom, g1.cGeom, C.double(tolerance))
 	return geosBoolResult(eqExact)
 }
