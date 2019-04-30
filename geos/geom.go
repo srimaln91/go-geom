@@ -4,6 +4,7 @@ package geos
 #include "geos.h"
 */
 import "C"
+import "errors"
 
 // Geom base type for geometric operations
 type Geom struct {
@@ -185,9 +186,9 @@ Covers returns true if this geometry covers the specified geometry.
 
 The covers predicate has the following equivalent definitions:
 
-    Every point of the other geometry is a point of this geometry.
-    The DE-9IM Intersection Matrix for the two geometries is T*****FF* or *T****FF* or ***T**FF* or ****T*FF*
-    g.coveredBy(this) (covers is the inverse of coveredBy)
+    - Every point of the other geometry is a point of this geometry.
+    - The DE-9IM Intersection Matrix for the two geometries is T*****FF* or *T****FF* or ***T**FF* or ****T*FF*
+    - g.coveredBy(this) (covers is the inverse of coveredBy)
 
 If either geometry is empty, the value of this predicate is false.
 
@@ -217,4 +218,62 @@ This predicate is similar to within, but is more inclusive (i.e. returns true fo
 func (g *Geom) CoveredBy(g1 *Geom) (bool, error) {
 	coverdBy := C.GEOSCoveredBy_r(ctxHandler, g.cGeom, g1.cGeom)
 	return geosBoolResult(coverdBy)
+}
+
+// Crosses returns true if this geometry crosses the specified geometry.
+func (g *Geom) Crosses(g1 *Geom) (bool, error) {
+	crosses := C.GEOSCrosses_r(ctxHandler, g.cGeom, g1.cGeom)
+	return geosBoolResult(crosses)
+}
+
+// GetNumCoordinates returns the count of this Geometrys vertices.
+func (g *Geom) GetNumCoordinates() (int, error) {
+	numcoords := C.GEOSGetNumCoordinates_r(ctxHandler, g.cGeom)
+
+	//GEOS return -1 on exception
+	if numcoords == C.int(-1) {
+		return 0, errors.New(GeosError)
+	}
+
+	return int(numcoords), nil
+
+}
+
+// Area returns the area of the geometry
+func (g *Geom) Area() (float64, error) {
+	var area _Ctype_double
+
+	ret := C.GEOSArea_r(ctxHandler, g.cGeom, &area)
+
+	if ret == C.int(-1) {
+		return 0.0, errors.New(GeosError)
+	}
+
+	return float64(area), nil
+}
+
+// Length returns the length of the geometry
+func (g *Geom) Length() (float64, error) {
+	var len _Ctype_double
+
+	ret := C.GEOSLength_r(ctxHandler, g.cGeom, &len)
+
+	if ret == C.int(-1) {
+		return 0.0, errors.New(GeosError)
+	}
+
+	return float64(len), nil
+}
+
+// Distance returns the distance between two geometries
+func (g *Geom) Distance(g1 *Geom) (float64, error) {
+	var dist _Ctype_double
+
+	ret := C.GEOSDistance_r(ctxHandler, g.cGeom, g1.cGeom, &dist)
+
+	if ret == C.int(-1) {
+		return 0.0, errors.New(GeosError)
+	}
+
+	return float64(dist), nil
 }

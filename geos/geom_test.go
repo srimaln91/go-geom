@@ -318,3 +318,109 @@ func TestCreatePoint(t *testing.T) {
 
 	cleanup(geom1, geom2)
 }
+
+func TestCovers(t *testing.T) {
+	geom1 := FromWKT("POLYGON((20 39,39 39,39 23,20 23,20 39))")
+	geom2 := FromWKT("POLYGON((30 32,36 32,36 27,30 27,30 32))")
+	geom3 := FromWKT("POLYGON((41 39,45 39,45 37,41 37,41 39))")
+
+	covers, _ := geom1.Covers(geom2)
+
+	if covers != true {
+		t.Errorf("Error: Covers()")
+	}
+
+	covers, _ = geom1.Covers(geom3)
+
+	if covers != false {
+		t.Errorf("Error: Covers()")
+	}
+
+	cleanup(geom1, geom2, geom3)
+}
+
+func TestCoveredBy(t *testing.T) {
+	geom1 := FromWKT("POLYGON((20 39,39 39,39 23,20 23,20 39))")
+	geom2 := FromWKT("POLYGON((30 32,36 32,36 27,30 27,30 32))")
+	geom3 := FromWKT("POLYGON((41 39,45 39,45 37,41 37,41 39))")
+
+	covered, _ := geom2.CoveredBy(geom1)
+
+	if covered != true {
+		t.Errorf("Error: CoveredBy()")
+	}
+
+	covered, _ = geom3.CoveredBy(geom1)
+
+	if covered != false {
+		t.Errorf("Error: CoveredBy()")
+	}
+
+	cleanup(geom1, geom2, geom3)
+
+}
+
+func TestCrosses(t *testing.T) {
+	geom1 := FromWKT("LINESTRING(76 25,79 21,77 19,78 16,77 10)")
+	geom2 := FromWKT("LINESTRING(73 19,75 17,79 18,81 17)")
+	geom3 := FromWKT("LINESTRING(64 28,73 28)")
+
+	crosses, _ := geom1.Crosses(geom2)
+
+	if !crosses {
+		t.Errorf("Error: Crosses()")
+	}
+
+	crosses, _ = geom1.Crosses(geom3)
+
+	if crosses {
+		t.Errorf("Error: Crosses()")
+	}
+
+	cleanup(geom1, geom2, geom3)
+}
+
+func TestGetNumCoordinates(t *testing.T) {
+	geom := FromWKT("LINESTRING(76 25,79 21,77 19,78 16,77 10)")
+
+	numberCoords, _ := geom.GetNumCoordinates()
+
+	if numberCoords != 5 {
+		t.Errorf("Error: GetNumCoordinates()")
+	}
+
+	cleanup(geom)
+}
+
+func TestArea(t *testing.T) {
+	geom := FromWKT("POLYGON((0 0,0 1,1 1,1 0,0 0))")
+
+	area, _ := geom.Area()
+
+	if area != 1 {
+		t.Errorf("Error: Area()")
+
+	}
+}
+
+func TestLength(t *testing.T) {
+	geom := FromWKT("LINESTRING(0 0, 0 1)")
+
+	len, _ := geom.Length()
+
+	if len != 1 {
+		t.Errorf("Error: Length()")
+
+	}
+}
+
+func TestDistance(t *testing.T) {
+	geom1 := FromWKT("LINESTRING(1 0, 1 1)")
+	geom2 := FromWKT("LINESTRING(0 0, 0 1)")
+
+	dist, _ := geom1.Distance(geom2)
+
+	if dist != 1 {
+		t.Errorf("Error: Distance()")
+	}
+}
