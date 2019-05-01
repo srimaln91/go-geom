@@ -15,7 +15,7 @@ before_install:
   - make check
   - sudo make install
 
-script: go test -v ./...
+script: go test -v ./geos/...
 notifications:
   email:
     - srimaln91@gmail.com
