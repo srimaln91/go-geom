@@ -6,9 +6,16 @@ go:
 dist: xenial
 
 before_install:
-  - sudo add-apt-repository -y ppa:ubuntugis/ubuntugis-unstable
-  - sudo apt-get --yes --force-yes update
-  - sudo apt install -y libgeos-dev
+  - sudo apt install -y gcc
+  - sudo apt install -y cmake
+  - wget http://download.osgeo.org/geos/geos-3.7.1.tar.bz2
+  - tar xvfj geos-3.7.1.tar.bz2
+  - cd geos-3.7.1
+  - mkdir build && cd build
+  - cmake ..
+  - make
+  - make check
+  - sudo make install
 
 script: go test -v ./...
 notifications:
