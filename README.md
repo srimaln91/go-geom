@@ -40,6 +40,9 @@ make check
 
 # Installation. Should be executed with superuser privileges
 sudo make install
+
+# Create necessary links
+sudo ldconfig
 ```
 
 ## Quick Start
