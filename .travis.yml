@@ -12,15 +12,15 @@ addons:
     - gcc
 
 before_install:
-  - go get golang.org/x/tools/cmd/cover
-  - go get github.com/mattn/goveralls
   - wget http://download.osgeo.org/geos/geos-3.7.1.tar.bz2
   - tar xvfj geos-3.7.1.tar.bz2
   - pushd geos-3.7.1 && mkdir build && cd build && cmake .. && make && sudo make install && sudo ldconfig && popd
 
 script: 
-  - go test -covermode=count -coverprofile=coverage.out -v ./geos/...
-  - goveralls -coverprofile=coverage.out -service=travis-ci
+  - go test -covermode=atomic -coverprofile=coverage.txt -v ./geos/...
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
 
 notifications:
   email:
