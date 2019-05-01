@@ -1,6 +1,8 @@
 # A Go wrapper for [libgeos](https://geos.osgeo.org/)
 
 [![Build Status](https://travis-ci.org/srimaln91/geos-go.svg?branch=master)](https://travis-ci.org/srimaln91/geos-go)
+[![codecov](https://codecov.io/gh/srimaln91/go-geos/branch/master/graph/badge.svg)](https://codecov.io/gh/srimaln91/go-geos)
+
 
 ## Install geos library on Ubuntu
 
