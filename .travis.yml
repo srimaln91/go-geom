@@ -20,7 +20,7 @@ before_install:
 
 script: 
   - go test -covermode=count -coverprofile=coverage.out -v ./geos/...
-  - goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN
+  - goveralls -coverprofile=coverage.out -service=travis-ci
 
 notifications:
   email:
