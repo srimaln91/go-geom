@@ -1,0 +1,22 @@
+language: go
+
+go:
+  - 1.x
+
+dist: xenial
+
+addons:
+  apt:
+    packages:
+    - cmake
+    - gcc
+
+before_install:
+  - wget http://download.osgeo.org/geos/geos-3.7.1.tar.bz2
+  - tar xvfj geos-3.7.1.tar.bz2
+  - pushd geos-3.7.1 && mkdir build && cd build && cmake .. && make && sudo make install && sudo ldconfig && popd
+
+script: go test -v ./geos/...
+notifications:
+  email:
+    - srimaln91@gmail.com
