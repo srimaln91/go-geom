@@ -7,7 +7,7 @@ dist: xenial
 
 before_install:
   - sudo apt install -y gcc
-  - wget http://download.osgeo.org/geos/geos-3.7.1.tar.bz2
+  - wget http://download.osgeo.org/geos/geos-3.7.0.tar.bz2
   - tar xvfj geos-3.7.1.tar.bz2
   - pushd geos-3.7.1 && ./configure && make && sudo make install && popd
 
