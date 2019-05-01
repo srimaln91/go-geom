@@ -9,11 +9,7 @@ before_install:
   - sudo apt install -y gcc
   - wget http://download.osgeo.org/geos/geos-3.7.1.tar.bz2
   - tar xvfj geos-3.7.1.tar.bz2
-  - cd geos-3.7.1
-  - ./configure
-  - make
-  - make check
-  - sudo make install
+  - pushd geos-3.7.1 && ./configure && make && sudo make install && popd
 
 script: go test -v ./geos/...
 notifications:
