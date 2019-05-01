@@ -41,7 +41,7 @@ func (cs *CoordinateSeq) SetZ(idx uint, z float64) {
 
 // GetX returns the value of x of a given index
 func (cs *CoordinateSeq) GetX(idx uint) float64 {
-	var val _Ctype_double
+	var val C.double
 
 	res := C.GEOSCoordSeq_getX_r(ctxHandler, cs.CSeq, C.uint(idx), &val)
 
@@ -54,7 +54,7 @@ func (cs *CoordinateSeq) GetX(idx uint) float64 {
 
 // GetY returns the value of y of a given index
 func (cs *CoordinateSeq) GetY(idx uint) float64 {
-	var val _Ctype_double
+	var val C.double
 
 	res := C.GEOSCoordSeq_getY_r(ctxHandler, cs.CSeq, C.uint(idx), &val)
 
@@ -67,7 +67,7 @@ func (cs *CoordinateSeq) GetY(idx uint) float64 {
 
 // GetZ returns the value of z of a given index
 func (cs *CoordinateSeq) GetZ(idx uint) float64 {
-	var val _Ctype_double
+	var val C.double
 
 	res := C.GEOSCoordSeq_getZ_r(ctxHandler, cs.CSeq, C.uint(idx), &val)
 
@@ -80,7 +80,7 @@ func (cs *CoordinateSeq) GetZ(idx uint) float64 {
 
 // GetSize retuns the size of coordinate sequence
 func (cs *CoordinateSeq) GetSize() uint {
-	var size _Ctype_uint
+	var size C.uint
 
 	res := C.GEOSCoordSeq_getSize_r(ctxHandler, cs.CSeq, &size)
 

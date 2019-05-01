@@ -241,7 +241,7 @@ func (g *Geom) GetNumCoordinates() (int, error) {
 
 // Area returns the area of the geometry
 func (g *Geom) Area() (float64, error) {
-	var area _Ctype_double
+	var area C.double
 
 	ret := C.GEOSArea_r(ctxHandler, g.cGeom, &area)
 
@@ -254,7 +254,7 @@ func (g *Geom) Area() (float64, error) {
 
 // Length returns the length of the geometry
 func (g *Geom) Length() (float64, error) {
-	var len _Ctype_double
+	var len C.double
 
 	ret := C.GEOSLength_r(ctxHandler, g.cGeom, &len)
 
@@ -267,7 +267,7 @@ func (g *Geom) Length() (float64, error) {
 
 // Distance returns the distance between two geometries
 func (g *Geom) Distance(g1 *Geom) (float64, error) {
-	var dist _Ctype_double
+	var dist C.double
 
 	ret := C.GEOSDistance_r(ctxHandler, g.cGeom, g1.cGeom, &dist)
 
