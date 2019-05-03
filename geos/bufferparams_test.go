@@ -11,8 +11,8 @@ func TestBufferWithParams(t *testing.T) {
 	quadsegs := 8
 	width := 10.0
 
-	bParams.SetEndCapStyle(GEOSBUF_CAP_ROUND)
-	bParams.SetJoinStyle(GEOSBUF_JOIN_ROUND)
+	bParams.SetEndCapStyle(GeosbufCapRound)
+	bParams.SetJoinStyle(GeosbufJoinRound)
 	bParams.SetQuadrantSegments(quadsegs)
 	bParams.SetMitreLimit(5)
 

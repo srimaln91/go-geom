@@ -42,8 +42,8 @@ func TestBufferWithStyles(t *testing.T) {
 
 	width := 1.0
 	quadSegs := 8
-	endCapStyle := GEOSBUF_CAP_ROUND
-	joinStyle := GEOSBUF_JOIN_MITRE
+	endCapStyle := GeosbufCapRound
+	joinStyle := GeosbufJoinMitre
 	mitreLimit := 4.0
 
 	geom.BufferWithStyle(width, quadSegs, endCapStyle, joinStyle, mitreLimit)
@@ -75,8 +75,8 @@ func BenchmarkBufferWithStyle(b *testing.B) {
 
 	width := 0.01745675
 	quadSegs := 8
-	endCapStyle := GEOSBUF_CAP_ROUND
-	joinStyle := GEOSBUF_JOIN_ROUND
+	endCapStyle := GeosbufCapRound
+	joinStyle := GeosbufJoinRound
 	mitreLimit := 5.0
 
 	b.RunParallel(func(pb *testing.PB) {
