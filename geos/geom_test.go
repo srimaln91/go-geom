@@ -34,6 +34,61 @@ func TestBuffer(t *testing.T) {
 
 }
 
+func TestBufferWithStyles(t *testing.T) {
+
+	geom := CreatePoint(0.0, 0.0)
+
+	initialNP, _ := geom.GetNumCoordinates()
+
+	width := 1.0
+	quadSegs := 8
+	endCapStyle := GEOSBUF_CAP_ROUND
+	joinStyle := GEOSBUF_JOIN_MITRE
+	mitreLimit := 4.0
+
+	geom.BufferWithStyle(width, quadSegs, endCapStyle, joinStyle, mitreLimit)
+
+	bufferNP, _ := geom.GetNumCoordinates()
+
+	if bufferNP == initialNP {
+		t.Errorf("Error: BufferWithStyles() error")
+	}
+
+	geom.Destroy()
+}
+
+func BenchmarkBuffer(b *testing.B) {
+	b.ReportAllocs()
+	b.RunParallel(func(pb *testing.PB) {
+
+		for pb.Next() {
+			geom := FromWKT(WKT)
+			geom.SetSRID(4326)
+			geom.Buffer(0.01745675)
+		}
+
+	})
+}
+
+func BenchmarkBufferWithStyle(b *testing.B) {
+	b.ReportAllocs()
+
+	width := 0.01745675
+	quadSegs := 8
+	endCapStyle := GEOSBUF_CAP_ROUND
+	joinStyle := GEOSBUF_JOIN_ROUND
+	mitreLimit := 5.0
+
+	b.RunParallel(func(pb *testing.PB) {
+
+		for pb.Next() {
+			geom := FromWKT(WKT)
+			geom.SetSRID(4326)
+			geom.BufferWithStyle(width, quadSegs, endCapStyle, joinStyle, mitreLimit)
+		}
+
+	})
+}
 func TestToWKT(t *testing.T) {
 
 	wkt := "POINT (0 0)"
@@ -54,19 +109,6 @@ func TestSRID(t *testing.T) {
 	if srid != 4326 {
 		t.Errorf("Error: SRID(%s) error", WKT)
 	}
-}
-
-func BenchmarkBuffer(b *testing.B) {
-	b.ReportAllocs()
-	b.RunParallel(func(pb *testing.PB) {
-
-		for pb.Next() {
-			geom := FromWKT(WKT)
-			geom.Buffer(1)
-		}
-
-	})
-
 }
 
 func TestSimplify(t *testing.T) {

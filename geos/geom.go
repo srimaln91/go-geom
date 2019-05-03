@@ -11,6 +11,21 @@ type Geom struct {
 	cGeom *C.GEOSGeometry
 }
 
+// Buffer Styles
+var (
+	GEOSBUF_CAP_ROUND  capstyle = C.GEOSBUF_CAP_ROUND
+	GEOSBUF_CAP_FLAT   capstyle = C.GEOSBUF_CAP_FLAT
+	GEOSBUF_CAP_SQUARE capstyle = C.GEOSBUF_CAP_SQUARE
+
+	GEOSBUF_JOIN_ROUND joinstyle = C.GEOSBUF_JOIN_ROUND
+	GEOSBUF_JOIN_MITRE joinstyle = C.GEOSBUF_JOIN_MITRE
+	GEOSBUF_JOIN_BEVEL joinstyle = C.GEOSBUF_JOIN_BEVEL
+)
+
+// Create dedicated type for cap styles and join styles
+type capstyle int
+type joinstyle int
+
 // GenerateGEOM generates a new go geom that wraps libgeos GEOSGeometry type
 func GenerateGEOM(cGeom *C.GEOSGeometry) *Geom {
 	return &Geom{
@@ -65,12 +80,30 @@ func (g *Geom) GetSRID() int {
 }
 
 // Buffer creates a buffer around the geometry
-func (g *Geom) Buffer(width float32) {
+func (g *Geom) Buffer(width float64) {
 
 	//Destroy old geom
 	defer C.GEOSGeom_destroy_r(ctxHandler, g.cGeom)
 
 	g.cGeom = C.GEOSBuffer_r(ctxHandler, g.cGeom, C.double(width), C.int(8))
+}
+
+// BufferWithParams creates a buffer around the geometry with specified bufffer options
+func (g *Geom) BufferWithParams(width float64, params *BufferParams) {
+
+	//Destroy old geom
+	defer C.GEOSGeom_destroy_r(ctxHandler, g.cGeom)
+
+	g.cGeom = C.GEOSBufferWithParams_r(ctxHandler, g.cGeom, params.CBufP, C.double(width))
+}
+
+// BufferWithStyle buffers a geometry using given style params
+func (g *Geom) BufferWithStyle(width float64, quadSegs int, endCapStyle capstyle, joinStyle joinstyle, mitreLimit float64) {
+
+	//Destroy old geom
+	defer C.GEOSGeom_destroy_r(ctxHandler, g.cGeom)
+	g.cGeom = C.GEOSBufferWithStyle_r(ctxHandler, g.cGeom, C.double(width), C.int(quadSegs), C.int(endCapStyle), C.int(joinStyle), C.double(mitreLimit))
+
 }
 
 // Destroy releases the memory allocated to GEOM
