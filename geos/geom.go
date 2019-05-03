@@ -13,13 +13,13 @@ type Geom struct {
 
 // Buffer Styles
 var (
-	GEOSBUF_CAP_ROUND  capstyle = C.GEOSBUF_CAP_ROUND
-	GEOSBUF_CAP_FLAT   capstyle = C.GEOSBUF_CAP_FLAT
-	GEOSBUF_CAP_SQUARE capstyle = C.GEOSBUF_CAP_SQUARE
+	GeosbufCapRound  capstyle = C.GEOSBUF_CAP_ROUND
+	GeosbufCapFlat   capstyle = C.GEOSBUF_CAP_FLAT
+	GeosbufCapSquare capstyle = C.GEOSBUF_CAP_SQUARE
 
-	GEOSBUF_JOIN_ROUND joinstyle = C.GEOSBUF_JOIN_ROUND
-	GEOSBUF_JOIN_MITRE joinstyle = C.GEOSBUF_JOIN_MITRE
-	GEOSBUF_JOIN_BEVEL joinstyle = C.GEOSBUF_JOIN_BEVEL
+	GeosbufJoinRound joinstyle = C.GEOSBUF_JOIN_ROUND
+	GeosbufJoinMitre joinstyle = C.GEOSBUF_JOIN_MITRE
+	GeosbufJoinBevel joinstyle = C.GEOSBUF_JOIN_BEVEL
 )
 
 // Create dedicated type for cap styles and join styles
