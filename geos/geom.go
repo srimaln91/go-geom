@@ -56,6 +56,11 @@ func FromWKT(wkt string) *Geom {
 	return geom
 }
 
+// SimplifiedBufferFromWkt simplifies and buffers inut wkt and
+func SimplifiedBufferFromWkt(wkt string, width float64, tolerance float64) string {
+	return C.GoString(C.simplified_buffer_from_wkt(ctxHandler, C.CString(wkt), C.double(width), C.double(tolerance)))
+}
+
 // ToWKT returns a WKT string
 func (g *Geom) ToWKT() string {
 
@@ -104,6 +109,12 @@ func (g *Geom) BufferWithStyle(width float64, quadSegs int, endCapStyle capstyle
 	defer C.GEOSGeom_destroy_r(ctxHandler, g.cGeom)
 	g.cGeom = C.GEOSBufferWithStyle_r(ctxHandler, g.cGeom, C.double(width), C.int(quadSegs), C.int(endCapStyle), C.int(joinStyle), C.double(mitreLimit))
 
+}
+
+// SimplifiedBuffer simplifies a geometry with a given tolerance and creates a buffer around that
+func (g *Geom) SimplifiedBuffer(tolerance float64, width float64) {
+	defer C.GEOSGeom_destroy_r(ctxHandler, g.cGeom)
+	g.cGeom = C.simplified_buffer(ctxHandler, g.cGeom, C.double(width), C.double(tolerance))
 }
 
 // Destroy releases the memory allocated to GEOM

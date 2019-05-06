@@ -34,6 +34,16 @@ func TestBuffer(t *testing.T) {
 
 }
 
+func TestSimplifiedBuffer(t *testing.T) {
+
+	geom := FromWKT(WKT)
+	geom.SimplifiedBuffer(0.0001, 0.01745675)
+	t.Log(geom.ToWKT())
+	if geom.cGeom == nil {
+		t.Errorf("Error: Buffer() error")
+	}
+}
+
 func TestBufferWithStyles(t *testing.T) {
 
 	geom := CreatePoint(0.0, 0.0)
@@ -68,6 +78,14 @@ func BenchmarkBuffer(b *testing.B) {
 		}
 
 	})
+}
+
+func TestSimplifiedBufferFromWkt(t *testing.T) {
+	result := SimplifiedBufferFromWkt(WKT, 0.0001, 0.01745675)
+
+	if result == "" {
+		t.Errorf("Error: SimplifiedBufferFromWkt() error")
+	}
 }
 
 func BenchmarkBufferWithStyle(b *testing.B) {
