@@ -1,5 +1,8 @@
 #include "geos.h"
 
+/*
+Parse WKT into GEOS geometry
+*/
 GEOSGeometry* 
 from_wkt(GEOSContextHandle_t handle, char *wkt)
 {
@@ -14,6 +17,9 @@ from_wkt(GEOSContextHandle_t handle, char *wkt)
     return geom;  
 }
 
+/*
+Get WKT from GEOS geometry
+*/
 char*
 to_wkt(GEOSContextHandle_t handle, GEOSGeometry *g)
 {
@@ -34,6 +40,9 @@ to_wkt(GEOSContextHandle_t handle, GEOSGeometry *g)
     return wkt;
 }
 
+/*
+Simplify a given geometry and generate a buffered geometry
+*/
 GEOSGeometry*
 simplified_buffer(GEOSContextHandle_t handle, GEOSGeometry *g, double width, double tolerance)
 {
@@ -52,6 +61,10 @@ simplified_buffer(GEOSContextHandle_t handle, GEOSGeometry *g, double width, dou
     return buffered_geom;
 }
 
+/*
+Simplify and generate a buffer for a given WKT text.
+This function returns WKT.
+*/
 char* 
 simplified_buffer_from_wkt(GEOSContextHandle_t handle, char *inwkt, double width, double tolerance)
 {

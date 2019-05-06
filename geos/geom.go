@@ -111,6 +111,12 @@ func (g *Geom) BufferWithStyle(width float64, quadSegs int, endCapStyle capstyle
 
 }
 
+// SimplifiedBuffer simplifies a geometry with a given tolerance and creates a buffer around that
+func (g *Geom) SimplifiedBuffer(tolerance float64, width float64) {
+	defer C.GEOSGeom_destroy_r(ctxHandler, g.cGeom)
+	g.cGeom = C.simplified_buffer(ctxHandler, g.cGeom, C.double(width), C.double(tolerance))
+}
+
 // Destroy releases the memory allocated to GEOM
 func (g *Geom) Destroy() {
 	C.GEOSGeom_destroy_r(ctxHandler, g.cGeom)
@@ -329,13 +335,4 @@ func (g *Geom) NumPoints() (int, error) {
 	}
 
 	return int(points), nil
-}
-
-// SimplifiedBuffer simplifies a geometry with a given tolerance and creates a buffer around that
-func (g *Geom) SimplifiedBuffer(tolerance float64, width float64) {
-
-	defer C.GEOSGeom_destroy_r(ctxHandler, g.cGeom)
-
-	g.cGeom = C.simplified_buffer(ctxHandler, g.cGeom, C.double(width), C.double(tolerance))
-
 }
