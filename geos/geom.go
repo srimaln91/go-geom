@@ -310,3 +310,18 @@ func (g *Geom) Distance(g1 *Geom) (float64, error) {
 
 	return float64(dist), nil
 }
+
+/*
+NumPoints returns the count of points of the geometry
+Geometry type must be a LineString.
+*/
+func (g *Geom) NumPoints() (int, error) {
+
+	points := C.GEOSGeomGetNumPoints_r(ctxHandler, g.cGeom)
+
+	if points < 1 {
+		return 0, errors.New(GeosError)
+	}
+
+	return int(points), nil
+}
