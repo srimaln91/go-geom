@@ -1,5 +1,39 @@
 #include "geos.h"
 
+GEOSGeometry* 
+from_wkt(GEOSContextHandle_t handle, char *wkt)
+{
+    GEOSWKTReader *wkt_reader;
+    GEOSGeometry *geom;
+
+    wkt_reader = GEOSWKTReader_create_r(handle);
+    geom = GEOSWKTReader_read_r(handle, wkt_reader, wkt);
+
+    GEOSWKTReader_destroy_r(handle, wkt_reader);  
+
+    return geom;  
+}
+
+char*
+to_wkt(GEOSContextHandle_t handle, GEOSGeometry *g)
+{
+    GEOSWKTWriter *wkt_writer;
+    int output_dimention;
+
+    wkt_writer = GEOSWKTWriter_create_r(handle);
+
+    // Set output dimention
+	output_dimention = GEOSGeom_getCoordinateDimension_r(handle, g);
+	GEOSWKTWriter_setOutputDimension_r(handle, wkt_writer, output_dimention);
+
+    char *wkt;
+    wkt = GEOSWKTWriter_write_r(handle, wkt_writer, g);
+
+    GEOSWKTWriter_destroy_r(handle, wkt_writer);
+
+    return wkt;
+}
+
 GEOSGeometry*
 simplified_buffer(GEOSContextHandle_t handle, GEOSGeometry *g, double width, double tolerance)
 {
@@ -16,4 +50,22 @@ simplified_buffer(GEOSContextHandle_t handle, GEOSGeometry *g, double width, dou
     GEOSGeom_destroy_r(handle, simple_geom);
 
     return buffered_geom;
+}
+
+char* 
+simplified_buffer_from_wkt(GEOSContextHandle_t handle, char *inwkt, double width, double tolerance)
+{
+    GEOSGeometry *in_geom;
+    GEOSGeometry *buffered_geom;
+    char *out_wkt;
+
+    in_geom = from_wkt(handle, inwkt);
+    buffered_geom = simplified_buffer(handle, in_geom, width, tolerance);
+
+    out_wkt = to_wkt(handle, buffered_geom);
+
+    GEOSGeom_destroy_r(handle, in_geom);
+    GEOSGeom_destroy_r(handle, buffered_geom);
+
+    return out_wkt;
 }

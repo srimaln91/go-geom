@@ -80,6 +80,14 @@ func BenchmarkBuffer(b *testing.B) {
 	})
 }
 
+func TestSimplifiedBufferFromWkt(t *testing.T) {
+	result := SimplifiedBufferFromWkt(WKT, 0.0001, 0.01745675)
+
+	if result == "" {
+		t.Errorf("Error: SimplifiedBufferFromWkt() error")
+	}
+}
+
 func BenchmarkBufferWithStyle(b *testing.B) {
 	b.ReportAllocs()
 

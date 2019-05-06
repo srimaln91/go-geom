@@ -56,6 +56,11 @@ func FromWKT(wkt string) *Geom {
 	return geom
 }
 
+// SimplifiedBufferFromWkt simplifies and buffers inut wkt and 
+func SimplifiedBufferFromWkt(wkt string, tolerance float64, width float64) string {
+	return C.GoString(C.simplified_buffer_from_wkt(ctxHandler, C.CString(wkt), C.double(tolerance), C.double(width)))
+}
+
 // ToWKT returns a WKT string
 func (g *Geom) ToWKT() string {
 
