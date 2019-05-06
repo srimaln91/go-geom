@@ -474,3 +474,20 @@ func TestDistance(t *testing.T) {
 		t.Errorf("Error: Distance()")
 	}
 }
+
+func TestNumPoints(t *testing.T) {
+	geom1 := FromWKT("LINESTRING(1 0, 1 1, 25 33)")
+	geom2 := FromWKT("POLYGON((20 39,39 39,39 23,20 23,20 39))")
+
+	numPoints, _ := geom1.NumPoints()
+
+	if numPoints != 3 {
+		t.Errorf("Error: NumPoints()")
+	}
+
+	numPoints, err := geom2.NumPoints()
+
+	if err == nil {
+		t.Errorf("Error: NumPoints()")
+	}
+}
