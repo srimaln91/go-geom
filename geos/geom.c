@@ -41,7 +41,7 @@ simplified_buffer(GEOSContextHandle_t handle, GEOSGeometry *g, double width, dou
     GEOSGeometry *buffered_geom;
 
     // Simplify geometry with a given tolerance
-    simple_geom = GEOSSimplify_r(handle, g, tolerance);
+    simple_geom = GEOSTopologyPreserveSimplify_r(handle, g, tolerance);
 
     //Create buffer
     buffered_geom = GEOSBuffer_r(handle, simple_geom, width, 8);
