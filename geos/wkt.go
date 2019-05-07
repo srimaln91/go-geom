@@ -31,7 +31,12 @@ func (w *wktWriter) write(g *Geom) string {
 	outputDimention := C.GEOSGeom_getCoordinateDimension_r(ctxHandler, g.cGeom)
 	C.GEOSWKTWriter_setOutputDimension_r(ctxHandler, w.c, outputDimention)
 
-	return C.GoString(C.GEOSWKTWriter_write_r(ctxHandler, w.c, g.cGeom))
+	wkt := C.GEOSWKTWriter_write_r(ctxHandler, w.c, g.cGeom)
+
+	//Clear buffers
+	defer C.GEOSFree_r(ctxHandler, unsafe.Pointer(wkt))
+
+	return C.GoString(wkt)
 }
 
 func createWktReader() *wktReader {
