@@ -1,4 +1,4 @@
-package geos
+package geom
 
 /*
 #include "geos.h"
@@ -17,11 +17,11 @@ var (
 )
 
 func init() {
-	ctxHandler = C.init_geos()
+	ctxHandler = C.init_geos_r()
 }
 
 // GoFinishGEOS remove libgeos allocations from the memory
-func GoFinishGEOS() {
+func GoFinishGEOS_r() {
 	C.finishGEOS_r(ctxHandler)
 }
 

@@ -1,4 +1,4 @@
-package geos
+package geom
 
 import (
 	"flag"
@@ -9,16 +9,25 @@ import (
 )
 
 var WKTLinestring string
+var JSONLinestring string
 
 func TestMain(m *testing.M) {
 
-	lineStringBytes, err := ioutil.ReadFile("testdata/linestring.txt")
+	lineStringBytes, err := ioutil.ReadFile("../testdata/linestring.txt")
 
 	if err != nil {
 		panic(err)
 	}
 
 	WKTLinestring = string(lineStringBytes)
+
+	lineStringBytes, err = ioutil.ReadFile("../testdata/lwgeom_loadroute.json")
+
+	if err != nil {
+		panic(err)
+	}
+
+	JSONLinestring = string(lineStringBytes)
 
 	flag.Parse()
 	exitCode := m.Run()
