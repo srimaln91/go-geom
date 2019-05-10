@@ -1,3 +1,6 @@
+#include <stdlib.h>
+#include <stdarg.h>
+#include <stdio.h>
 #include "geos.h"
 
 void log_notice(const char *fmt, ...)
@@ -22,7 +25,7 @@ void log_error(const char *fmt, ...)
 
 GEOSContextHandle_t ctx;
 
-GEOSContextHandle_t init_geos()
+GEOSContextHandle_t init_geos_r()
 {
     ctx = GEOS_init_r();
 
@@ -31,4 +34,9 @@ GEOSContextHandle_t init_geos()
     GEOSContext_setNoticeHandler_r(ctx, log_notice);
 
     return ctx;
+}
+
+void init_geos()
+{
+	initGEOS(log_notice, log_error);
 }
