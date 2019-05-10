@@ -19,7 +19,7 @@ before_install:
   - sudo apt-get install -y libproj-dev
 
 script: 
-  - go test -covermode=atomic -coverprofile=coverage.txt -v ./geos/...
+  - go test -covermode=atomic -coverprofile=coverage.txt -v ./...
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
