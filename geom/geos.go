@@ -20,8 +20,8 @@ func init() {
 	ctxHandler = C.init_geos_r()
 }
 
-// GoFinishGEOS remove libgeos allocations from the memory
-func GoFinishGEOS_r() {
+// GoFinishGEOSR remove libgeos allocations from the memory
+func GoFinishGEOSR() {
 	C.finishGEOS_r(ctxHandler)
 }
 
