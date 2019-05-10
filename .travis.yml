@@ -16,6 +16,7 @@ before_install:
   - tar xvfj geos-3.7.1.tar.bz2
   - pushd geos-3.7.1 && mkdir build && cd build && cmake .. && make && sudo make install && sudo ldconfig && popd
   - sudo apt-get install -y liblwgeom-2.5-0 liblwgeom-dev
+  - sudo apt-get install -y libproj-dev
 
 script: 
   - go test -covermode=atomic -coverprofile=coverage.txt -v ./geos/...
