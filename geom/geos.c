@@ -1,3 +1,6 @@
+#include <stdlib.h>
+#include <stdarg.h>
+#include <stdio.h>
 #include "geos.h"
 
 void log_notice(const char *fmt, ...)

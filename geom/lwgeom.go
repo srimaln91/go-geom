@@ -5,6 +5,7 @@ package geom
 #include <geos_c.h>
 #include "lwgeom_geos.h"
 #include "geos.h"
+#include "lwgeom.h"
 char *cnull = NULL;
 */
 import (
@@ -63,5 +64,6 @@ func (lwg *LwGeom) GetSRID() int {
 
 func (lwg *LwGeom) ToGEOS() *C.GEOSGeometry {
 	C.init_geos()
+	defer C.finishGEOS()
 	return C.LWGEOM2GEOS(lwg.LwGeom, C.uchar(0))
 }
