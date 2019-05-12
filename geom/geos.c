@@ -25,6 +25,7 @@ void log_error(const char *fmt, ...)
 
 GEOSContextHandle_t ctx;
 
+// Thread safe versions of GEOS initialization and destruct functions
 GEOSContextHandle_t init_geos_r()
 {
     ctx = GEOS_init_r();
@@ -36,7 +37,15 @@ GEOSContextHandle_t init_geos_r()
     return ctx;
 }
 
+/*
+Initialization/ destruction function for non R version which will be used by liblwgeom
+*/
 void init_geos()
 {
 	initGEOS(log_notice, log_error);
+}
+
+void finish_geos()
+{
+    finishGEOS();
 }

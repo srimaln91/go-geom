@@ -17,15 +17,15 @@ type wktWriter struct {
 	c *C.GEOSWKTWriter
 }
 
-func (r *wktReader) read(wkt string) *Geom {
+func (r *wktReader) read(wkt string) *GEOSGeom {
 	cs := C.CString(wkt)
 	defer C.free(unsafe.Pointer(cs))
 
 	cGeom := C.GEOSWKTReader_read_r(ctxHandler, r.c, cs)
-	return GenerateGEOM(cGeom)
+	return GenerateGeosGeom(cGeom)
 }
 
-func (w *wktWriter) write(g *Geom) string {
+func (w *wktWriter) write(g *GEOSGeom) string {
 
 	//Set output dimention (2 or 3)
 	outputDimention := C.GEOSGeom_getCoordinateDimension_r(ctxHandler, g.cGeom)

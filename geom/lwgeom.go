@@ -30,6 +30,9 @@ func LwGeomFromGeoJSON(json string) *LwGeom {
 
 // LwGeomFromGEOS convert GEOS geometry to lwgeom
 func LwGeomFromGEOS(geosGeom *C.GEOSGeometry) *LwGeom {
+	C.init_geos()
+	defer C.finish_geos()
+
 	lwGeom := C.GEOS2LWGEOM(geosGeom, C.uchar(0))
 
 	return &LwGeom{
@@ -71,8 +74,20 @@ func (lwg *LwGeom) GetSRID() int {
 }
 
 // ToGEOS converts lwgeom to GEOS geometry
-func (lwg *LwGeom) ToGEOS() *C.GEOSGeometry {
+func (lwg *LwGeom) ToGEOS() *GEOSGeom {
 	C.init_geos()
 	defer C.finishGEOS()
-	return C.LWGEOM2GEOS(lwg.LwGeom, C.uchar(0))
+	return GenerateGeosGeom(C.LWGEOM2GEOS(lwg.LwGeom, C.uchar(0)))
+}
+
+/*
+Project transforms (reproject) a geometry from one SRS to another.
+You will have to use the WKT versions of SRS definition.
+references: https://epsg.io
+*/
+func (lwg *LwGeom) Project(fromSRS string, toSRS string) {
+	from := C.lwproj_from_string(C.CString(fromSRS))
+	to := C.lwproj_from_string(C.CString(toSRS))
+
+	C.lwgeom_transform(lwg.LwGeom, from, to)
 }
