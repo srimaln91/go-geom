@@ -47,9 +47,57 @@ func TestToGEOS(t *testing.T) {
 	geom := LwGeomFromGeoJSON(JSONLinestring)
 	geos := geom.ToGEOS()
 
-	if geos == nil {
+	coords, _ := geos.GetNumCoordinates()
+
+	if coords == 0 {
 		t.Error("Error: LwGeomToGeoJson()")
 	}
 
 	geom.Free()
+	geos.Destroy()
+}
+
+func TestLwGeomFromGEOS(t *testing.T) {
+
+	geos := FromWKT(WKTLinestring)
+	LwGeom := LwGeomFromGEOS(geos.cGeom)
+
+	coords, _ := geos.GetNumCoordinates()
+
+	if coords == 0 {
+		t.Error("Error: LwGeomToGeoJson()")
+	}
+
+	LwGeom.Free()
+	geos.Destroy()
+}
+
+func TestProject(t *testing.T) {
+
+	geom := LwGeomFromGeoJSON(JSONLinestring)
+	geom.SetSRID(4326)
+
+	fromSRS := SRS["EPSG:4326"]
+	toSRS := SRS["EPSG:3857"]
+
+	// geom.Project(fromSRS, toSRS)
+	geom.Project(fromSRS, toSRS)
+	geom.SetSRID(3857)
+
+	geos := geom.ToGEOS()
+	geos.Simplify(0.001)
+	geos.Buffer(200.00)
+
+	geom2 := LwGeomFromGEOS(geos.cGeom)
+	geom2.Project(toSRS, fromSRS)
+
+	geom2.SetSRID(4326)
+
+	if geom2.GetSRID() != 4326 {
+		t.Error("Error: LwGeomToGeoJson()")
+	}
+
+	geom.Free()
+	geos.Destroy()
+
 }

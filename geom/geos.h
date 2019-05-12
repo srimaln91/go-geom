@@ -18,9 +18,9 @@ char *to_wkt(GEOSContextHandle_t handle, GEOSGeometry *g);
 GEOSGeometry *simplified_buffer(GEOSContextHandle_t handle, GEOSGeometry *g, double width, double tolerance);
 char *simplified_buffer_from_wkt(GEOSContextHandle_t handle, char *inwkt, double width, double tolerance);
 
-
 GEOSContextHandle_t ctx;
 GEOSContextHandle_t init_geos_r();
 void init_geos();
+void finish_geos();
 
 #endif

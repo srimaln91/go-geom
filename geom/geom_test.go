@@ -36,7 +36,7 @@ func TestMain(m *testing.M) {
 }
 
 // Clear a set of Geoms from memory
-func cleanup(geoms ...*Geom) {
+func cleanup(geoms ...*GEOSGeom) {
 	for _, geom := range geoms {
 		geom.Destroy()
 	}
@@ -185,18 +185,18 @@ func TestSimplifyPreserveTopology(t *testing.T) {
 	}
 }
 
-func TestReverse(t *testing.T) {
-	wkt := "LINESTRING (30 10, 10 30, 40 40)"
-	geom := FromWKT(wkt)
+// func TestReverse(t *testing.T) {
+// 	wkt := "LINESTRING (30 10, 10 30, 40 40)"
+// 	geom := FromWKT(wkt)
 
-	geom.Reverse()
+// 	geom.Reverse()
 
-	resultWKT := geom.ToWKT()
+// 	resultWKT := geom.ToWKT()
 
-	if resultWKT != "LINESTRING (40.0000000000000000 40.0000000000000000, 10.0000000000000000 30.0000000000000000, 30.0000000000000000 10.0000000000000000)" {
-		t.Errorf("Error: ToWKT(%s) error", resultWKT)
-	}
-}
+// 	if resultWKT != "LINESTRING (40.0000000000000000 40.0000000000000000, 10.0000000000000000 30.0000000000000000, 30.0000000000000000 10.0000000000000000)" {
+// 		t.Errorf("Error: ToWKT(%s) error", resultWKT)
+// 	}
+// }
 
 func TestVersion(t *testing.T) {
 	version := Version()
