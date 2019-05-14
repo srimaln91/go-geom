@@ -16,13 +16,19 @@ var (
 	ctxHandler C.GEOSContextHandle_t
 )
 
+// init initializes the package
 func init() {
-	ctxHandler = C.init_geos_r()
+	GoInitGEOS()
 }
 
-// GoFinishGEOSR remove libgeos allocations from the memory
-func GoFinishGEOSR() {
-	C.finishGEOS_r(ctxHandler)
+// GoInitGEOS initializes libgeos
+func GoInitGEOS() {
+	C.init_geos()
+}
+
+// GoFinishGEOS remove libgeos allocations from the memory
+func GoFinishGEOS() {
+	C.finish_geos()
 }
 
 // Version returns the GEOS version

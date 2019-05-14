@@ -6,7 +6,7 @@ package geom
 import "C"
 import "errors"
 
-// Geom base type for geometric operations
+// GEOSGeom base type for geometric operations
 type GEOSGeom struct {
 	cGeom *C.GEOSGeometry
 }
@@ -48,7 +48,7 @@ func CreatePoint(x float64, y float64) *GEOSGeom {
 	coordSeq.SetX(0, x)
 	coordSeq.SetY(0, y)
 
-	return GenerateGeosGeom(C.GEOSGeom_createPoint_r(ctxHandler, coordSeq.CSeq))
+	return GenerateGeosGeom(C.GEOSGeom_createPoint(coordSeq.CSeq))
 }
 
 // FromWKT creates a Geom from WKT string
@@ -74,18 +74,18 @@ func (g *GEOSGeom) ToWKT() string {
 
 // SimplifiedBufferFromWkt simplifies and buffers inut wkt and
 func SimplifiedBufferFromWkt(wkt string, width float64, tolerance float64) string {
-	return C.GoString(C.simplified_buffer_from_wkt(ctxHandler, C.CString(wkt), C.double(width), C.double(tolerance)))
+	return C.GoString(C.simplified_buffer_from_wkt(C.CString(wkt), C.double(width), C.double(tolerance)))
 }
 
 // SetSRID sets SRID of the geometry
 func (g *GEOSGeom) SetSRID(srid int) {
-	C.GEOSSetSRID_r(ctxHandler, g.cGeom, C.int(srid))
+	C.GEOSSetSRID(g.cGeom, C.int(srid))
 }
 
 // GetSRID returns the SRID of the geometry
 func (g *GEOSGeom) GetSRID() int {
 
-	srid := C.GEOSGetSRID_r(ctxHandler, g.cGeom)
+	srid := C.GEOSGetSRID(g.cGeom)
 
 	return int(srid)
 }
@@ -94,47 +94,47 @@ func (g *GEOSGeom) GetSRID() int {
 func (g *GEOSGeom) Buffer(width float64) {
 
 	//Destroy old geom
-	defer C.GEOSGeom_destroy_r(ctxHandler, g.cGeom)
+	defer C.GEOSGeom_destroy(g.cGeom)
 
-	g.cGeom = C.GEOSBuffer_r(ctxHandler, g.cGeom, C.double(width), C.int(8))
+	g.cGeom = C.GEOSBuffer(g.cGeom, C.double(width), C.int(8))
 }
 
 // BufferWithParams creates a buffer around the geometry with specified bufffer options
 func (g *GEOSGeom) BufferWithParams(width float64, params *BufferParams) {
 
 	//Destroy old geom
-	defer C.GEOSGeom_destroy_r(ctxHandler, g.cGeom)
+	defer C.GEOSGeom_destroy(g.cGeom)
 
-	g.cGeom = C.GEOSBufferWithParams_r(ctxHandler, g.cGeom, params.CBufP, C.double(width))
+	g.cGeom = C.GEOSBufferWithParams(g.cGeom, params.CBufP, C.double(width))
 }
 
 // BufferWithStyle buffers a geometry using given style params
 func (g *GEOSGeom) BufferWithStyle(width float64, quadSegs int, endCapStyle capstyle, joinStyle joinstyle, mitreLimit float64) {
 
 	//Destroy old geom
-	defer C.GEOSGeom_destroy_r(ctxHandler, g.cGeom)
-	g.cGeom = C.GEOSBufferWithStyle_r(ctxHandler, g.cGeom, C.double(width), C.int(quadSegs), C.int(endCapStyle), C.int(joinStyle), C.double(mitreLimit))
+	defer C.GEOSGeom_destroy(g.cGeom)
+	g.cGeom = C.GEOSBufferWithStyle(g.cGeom, C.double(width), C.int(quadSegs), C.int(endCapStyle), C.int(joinStyle), C.double(mitreLimit))
 
 }
 
 // SimplifiedBuffer simplifies a geometry with a given tolerance and creates a buffer around that
 func (g *GEOSGeom) SimplifiedBuffer(tolerance float64, width float64) {
-	defer C.GEOSGeom_destroy_r(ctxHandler, g.cGeom)
-	g.cGeom = C.simplified_buffer(ctxHandler, g.cGeom, C.double(width), C.double(tolerance))
+	defer C.GEOSGeom_destroy(g.cGeom)
+	g.cGeom = C.simplified_buffer(g.cGeom, C.double(width), C.double(tolerance))
 }
 
 // Destroy releases the memory allocated to GEOM
 func (g *GEOSGeom) Destroy() {
-	C.GEOSGeom_destroy_r(ctxHandler, g.cGeom)
+	C.GEOSGeom_destroy(g.cGeom)
 }
 
 // Simplify simplifies the geometry with a given tolerance
 func (g *GEOSGeom) Simplify(tolerance float32) {
 
 	//Destroy old geom
-	defer C.GEOSGeom_destroy_r(ctxHandler, g.cGeom)
+	defer C.GEOSGeom_destroy(g.cGeom)
 
-	g.cGeom = C.GEOSSimplify_r(ctxHandler, g.cGeom, C.double(tolerance))
+	g.cGeom = C.GEOSSimplify(g.cGeom, C.double(tolerance))
 }
 
 /*
@@ -144,9 +144,9 @@ geometries (polygons in particular) that are invalid.
 func (g *GEOSGeom) SimplifyPreserveTopology(tolerance float32) {
 
 	//Destroy old geom
-	defer C.GEOSGeom_destroy_r(ctxHandler, g.cGeom)
+	defer C.GEOSGeom_destroy(g.cGeom)
 
-	g.cGeom = C.GEOSTopologyPreserveSimplify_r(ctxHandler, g.cGeom, C.double(tolerance))
+	g.cGeom = C.GEOSTopologyPreserveSimplify(g.cGeom, C.double(tolerance))
 }
 
 // Reverse reverses the geom
@@ -161,19 +161,19 @@ func (g *GEOSGeom) SimplifyPreserveTopology(tolerance float32) {
 // Union returns the union of two geometries
 func (g *GEOSGeom) Union(g1 *GEOSGeom) *GEOSGeom {
 
-	union := C.GEOSUnion_r(ctxHandler, g.cGeom, g1.cGeom)
+	union := C.GEOSUnion(g.cGeom, g1.cGeom)
 	return GenerateGeosGeom(union)
 }
 
 // Intersection returns the intersection of 2 geometries
 func (g *GEOSGeom) Intersection(g1 *GEOSGeom) *GEOSGeom {
-	intersection := C.GEOSIntersection_r(ctxHandler, g.cGeom, g1.cGeom)
+	intersection := C.GEOSIntersection(g.cGeom, g1.cGeom)
 	return GenerateGeosGeom(intersection)
 }
 
 // Intersects checks whether the geom intersects with an another geom
 func (g *GEOSGeom) Intersects(g1 *GEOSGeom) (bool, error) {
-	intersects := C.GEOSIntersects_r(ctxHandler, g.cGeom, g1.cGeom)
+	intersects := C.GEOSIntersects(g.cGeom, g1.cGeom)
 	return geosBoolResult(intersects)
 }
 
@@ -183,31 +183,31 @@ If any of the aforementioned returns true, then the geometries are not spatially
 Disjoint implies false for spatial intersection.
 */
 func (g *GEOSGeom) Disjoints(g1 *GEOSGeom) (bool, error) {
-	disjoint := C.GEOSDisjoint_r(ctxHandler, g.cGeom, g1.cGeom)
+	disjoint := C.GEOSDisjoint(g.cGeom, g1.cGeom)
 	return geosBoolResult(disjoint)
 }
 
 // Touches returns TRUE if the only points in common between g1 and g2 lie in the union of the boundaries of g1 and g2.
 func (g *GEOSGeom) Touches(g1 *GEOSGeom) (bool, error) {
-	touches := C.GEOSTouches_r(ctxHandler, g.cGeom, g1.cGeom)
+	touches := C.GEOSTouches(g.cGeom, g1.cGeom)
 	return geosBoolResult(touches)
 }
 
 // Within returns TRUE if geometry A is completely inside geometry B
 func (g *GEOSGeom) Within(g1 *GEOSGeom) (bool, error) {
-	within := C.GEOSWithin_r(ctxHandler, g.cGeom, g1.cGeom)
+	within := C.GEOSWithin(g.cGeom, g1.cGeom)
 	return geosBoolResult(within)
 }
 
 // Contains returns TRUE if geometry B is completely inside geometry A.
 func (g *GEOSGeom) Contains(g1 *GEOSGeom) (bool, error) {
-	contains := C.GEOSContains_r(ctxHandler, g.cGeom, g1.cGeom)
+	contains := C.GEOSContains(g.cGeom, g1.cGeom)
 	return geosBoolResult(contains)
 }
 
 // Overlaps returns TRUE if geometry B is completely inside geometry A.
 func (g *GEOSGeom) Overlaps(g1 *GEOSGeom) (bool, error) {
-	overlaps := C.GEOSOverlaps_r(ctxHandler, g.cGeom, g1.cGeom)
+	overlaps := C.GEOSOverlaps(g.cGeom, g1.cGeom)
 	return geosBoolResult(overlaps)
 }
 
@@ -220,14 +220,14 @@ intersect and no part of the interior or boundary of one geometry intersects the
 equals to Within & Contains
 */
 func (g *GEOSGeom) Equals(g1 *GEOSGeom) (bool, error) {
-	eq := C.GEOSEquals_r(ctxHandler, g.cGeom, g1.cGeom)
+	eq := C.GEOSEquals(g.cGeom, g1.cGeom)
 	return geosBoolResult(eq)
 }
 
 // EqualsExact returns true if the two Geometrys are of the same type and their
 // vertices corresponding by index are equal up to a specified tolerance.
 func (g *GEOSGeom) EqualsExact(g1 *GEOSGeom, tolerance float64) (bool, error) {
-	eqExact := C.GEOSEqualsExact_r(ctxHandler, g.cGeom, g1.cGeom, C.double(tolerance))
+	eqExact := C.GEOSEqualsExact(g.cGeom, g1.cGeom, C.double(tolerance))
 	return geosBoolResult(eqExact)
 }
 
@@ -248,7 +248,7 @@ interior of geometries. For most situations, covers should be used in preference
 As an added benefit, covers is more amenable to optimization, and hence should be more performant.
 */
 func (g *GEOSGeom) Covers(g1 *GEOSGeom) (bool, error) {
-	covers := C.GEOSCovers_r(ctxHandler, g.cGeom, g1.cGeom)
+	covers := C.GEOSCovers(g.cGeom, g1.cGeom)
 	return geosBoolResult(covers)
 }
 
@@ -266,19 +266,19 @@ If either geometry is empty, the value of this predicate is false.
 This predicate is similar to within, but is more inclusive (i.e. returns true for more cases).
 */
 func (g *GEOSGeom) CoveredBy(g1 *GEOSGeom) (bool, error) {
-	coverdBy := C.GEOSCoveredBy_r(ctxHandler, g.cGeom, g1.cGeom)
+	coverdBy := C.GEOSCoveredBy(g.cGeom, g1.cGeom)
 	return geosBoolResult(coverdBy)
 }
 
 // Crosses returns true if this geometry crosses the specified geometry.
 func (g *GEOSGeom) Crosses(g1 *GEOSGeom) (bool, error) {
-	crosses := C.GEOSCrosses_r(ctxHandler, g.cGeom, g1.cGeom)
+	crosses := C.GEOSCrosses(g.cGeom, g1.cGeom)
 	return geosBoolResult(crosses)
 }
 
 // GetNumCoordinates returns the count of this Geometrys vertices.
 func (g *GEOSGeom) GetNumCoordinates() (int, error) {
-	numcoords := C.GEOSGetNumCoordinates_r(ctxHandler, g.cGeom)
+	numcoords := C.GEOSGetNumCoordinates(g.cGeom)
 
 	//GEOS return -1 on exception
 	if numcoords == C.int(-1) {
@@ -293,7 +293,7 @@ func (g *GEOSGeom) GetNumCoordinates() (int, error) {
 func (g *GEOSGeom) Area() (float64, error) {
 	var area C.double
 
-	ret := C.GEOSArea_r(ctxHandler, g.cGeom, &area)
+	ret := C.GEOSArea(g.cGeom, &area)
 
 	if ret == C.int(-1) {
 		return 0.0, errors.New(GeosError)
@@ -306,7 +306,7 @@ func (g *GEOSGeom) Area() (float64, error) {
 func (g *GEOSGeom) Length() (float64, error) {
 	var len C.double
 
-	ret := C.GEOSLength_r(ctxHandler, g.cGeom, &len)
+	ret := C.GEOSLength(g.cGeom, &len)
 
 	if ret == C.int(-1) {
 		return 0.0, errors.New(GeosError)
@@ -319,7 +319,7 @@ func (g *GEOSGeom) Length() (float64, error) {
 func (g *GEOSGeom) Distance(g1 *GEOSGeom) (float64, error) {
 	var dist C.double
 
-	ret := C.GEOSDistance_r(ctxHandler, g.cGeom, g1.cGeom, &dist)
+	ret := C.GEOSDistance(g.cGeom, g1.cGeom, &dist)
 
 	if ret == C.int(-1) {
 		return 0.0, errors.New(GeosError)
@@ -334,7 +334,7 @@ Geometry type must be a LineString.
 */
 func (g *GEOSGeom) NumPoints() (int, error) {
 
-	points := C.GEOSGeomGetNumPoints_r(ctxHandler, g.cGeom)
+	points := C.GEOSGeomGetNumPoints(g.cGeom)
 
 	if points < 1 {
 		return 0, errors.New(GeosError)
@@ -343,14 +343,19 @@ func (g *GEOSGeom) NumPoints() (int, error) {
 	return int(points), nil
 }
 
-// GEOSGeomTypeId returns the type ID of the geometry
-func (g *GEOSGeom) GEOSGeomTypeId() (int, error) {
+// GEOSGeomTypeID returns the type ID of the geometry
+func (g *GEOSGeom) GEOSGeomTypeID() (int, error) {
 
-	geomTypeID := C.GEOSGeomTypeId_r(ctxHandler, g.cGeom)
+	geomTypeID := C.GEOSGeomTypeId(g.cGeom)
 
-	if geomTypeID == 0 {
+	if geomTypeID < 0 {
 		return 0, errors.New(GeosError)
 	}
 
 	return int(geomTypeID), nil
+}
+
+// GetRawGeom returns a pointer to the base C type
+func (g *GEOSGeom) GetRawGeom() *C.GEOSGeometry {
+	return g.cGeom
 }

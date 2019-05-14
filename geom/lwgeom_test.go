@@ -15,10 +15,10 @@ func TestGeomFromGeoJson(t *testing.T) {
 	geom.Free()
 }
 
-func TestLwGeomToGeoJson(t *testing.T) {
+func TestToGeoJson(t *testing.T) {
 
 	geom := LwGeomFromGeoJSON(JSONLinestring)
-	jsonString := geom.LwGeomToGeoJSON(4, 0)
+	jsonString := geom.ToGeoJSON(4, 0)
 
 	if jsonString == "" {
 		t.Error("Error: LwGeomToGeoJson()")
@@ -33,7 +33,7 @@ func TestLineSubstring(t *testing.T) {
 
 	geom := LwGeomFromGeoJSON(JSONLinestring)
 	geom.LineSubstring(0.5, 0.52)
-	resultJSON := geom.LwGeomToGeoJSON(4, 0)
+	resultJSON := geom.ToGeoJSON(4, 0)
 
 	if resultJSON != expectedJSON {
 		t.Error("Error: LineSubstring()", resultJSON)
@@ -80,7 +80,6 @@ func TestProject(t *testing.T) {
 	fromSRS := SRS["EPSG:4326"]
 	toSRS := SRS["EPSG:3857"]
 
-	// geom.Project(fromSRS, toSRS)
 	geom.Project(fromSRS, toSRS)
 	geom.SetSRID(3857)
 
@@ -94,10 +93,9 @@ func TestProject(t *testing.T) {
 	geom2.SetSRID(4326)
 
 	if geom2.GetSRID() != 4326 {
-		t.Error("Error: LwGeomToGeoJson()")
+		t.Error("Error: Project()")
 	}
 
 	geom.Free()
 	geos.Destroy()
-
 }

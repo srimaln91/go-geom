@@ -21,27 +21,27 @@ func (r *wktReader) read(wkt string) *GEOSGeom {
 	cs := C.CString(wkt)
 	defer C.free(unsafe.Pointer(cs))
 
-	cGeom := C.GEOSWKTReader_read_r(ctxHandler, r.c, cs)
+	cGeom := C.GEOSWKTReader_read(r.c, cs)
 	return GenerateGeosGeom(cGeom)
 }
 
 func (w *wktWriter) write(g *GEOSGeom) string {
 
 	//Set output dimention (2 or 3)
-	outputDimention := C.GEOSGeom_getCoordinateDimension_r(ctxHandler, g.cGeom)
-	C.GEOSWKTWriter_setOutputDimension_r(ctxHandler, w.c, outputDimention)
+	outputDimention := C.GEOSGeom_getCoordinateDimension(g.cGeom)
+	C.GEOSWKTWriter_setOutputDimension(w.c, outputDimention)
 
-	wkt := C.GEOSWKTWriter_write_r(ctxHandler, w.c, g.cGeom)
+	wkt := C.GEOSWKTWriter_write(w.c, g.cGeom)
 
 	//Clear buffers
-	defer C.GEOSFree_r(ctxHandler, unsafe.Pointer(wkt))
+	defer C.GEOSFree(unsafe.Pointer(wkt))
 
 	return C.GoString(wkt)
 }
 
 func createWktReader() *wktReader {
 
-	c := C.GEOSWKTReader_create_r(ctxHandler)
+	c := C.GEOSWKTReader_create()
 	if c == nil {
 		return nil
 	}
@@ -58,11 +58,11 @@ func createWktReader() *wktReader {
 
 // Destroy releases the memory allocated to WKT reader
 func (r *wktReader) destroy() {
-	C.GEOSWKTReader_destroy_r(ctxHandler, r.c)
+	C.GEOSWKTReader_destroy(r.c)
 }
 
 func createWktWriter() *wktWriter {
-	c := C.GEOSWKTWriter_create_r(ctxHandler)
+	c := C.GEOSWKTWriter_create()
 	if c == nil {
 		return nil
 	}
@@ -79,5 +79,5 @@ func createWktWriter() *wktWriter {
 
 // Destroy releases the memory allocated to WKT writer
 func (w *wktWriter) destroy() {
-	C.GEOSWKTWriter_destroy_r(ctxHandler, w.c)
+	C.GEOSWKTWriter_destroy(w.c)
 }

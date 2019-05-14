@@ -11,7 +11,10 @@ char *cnull = NULL;
 import (
 	"C"
 )
-import "unsafe"
+
+import (
+	"unsafe"
+)
 
 // LwGeom Go type to wrap lwgeom
 type LwGeom struct {
@@ -19,9 +22,11 @@ type LwGeom struct {
 }
 
 // LwGeomFromGeoJSON creates lwgeom from GeoJson
-func LwGeomFromGeoJSON(json string) *LwGeom {
+func LwGeomFromGeoJSON(geojson string) *LwGeom {
 
-	lwgeom := C.lwgeom_from_geojson(C.CString(json), &C.cnull)
+	geojsonCstring := C.CString(geojson)
+	lwgeom := C.lwgeom_from_geojson(geojsonCstring, &C.cnull)
+	defer C.lwfree(unsafe.Pointer(geojsonCstring))
 
 	return &LwGeom{
 		LwGeom: lwgeom,
@@ -30,8 +35,6 @@ func LwGeomFromGeoJSON(json string) *LwGeom {
 
 // LwGeomFromGEOS convert GEOS geometry to lwgeom
 func LwGeomFromGEOS(geosGeom *C.GEOSGeometry) *LwGeom {
-	C.init_geos()
-	defer C.finish_geos()
 
 	lwGeom := C.GEOS2LWGEOM(geosGeom, C.uchar(0))
 
@@ -45,22 +48,21 @@ func (lwg *LwGeom) Free() {
 	C.lwgeom_free(lwg.LwGeom)
 }
 
-// LwGeomToGeoJSON generates geojson from lwgeom
-func (lwg *LwGeom) LwGeomToGeoJSON(precisoin int, hasBbox int) string {
+// ToGeoJSON generates geojson from lwgeom
+func (lwg *LwGeom) ToGeoJSON(precisoin int, hasBbox int) string {
 
 	geojson := C.lwgeom_to_geojson(lwg.LwGeom, C.cnull, C.int(precisoin), C.int(hasBbox))
-
+	defer C.lwfree(unsafe.Pointer(geojson))
 	return C.GoString(geojson)
 }
 
 // LineSubstring returns a part of the linestring
 func (lwg *LwGeom) LineSubstring(from float64, to float64) {
 
-	defer C.lwfree(unsafe.Pointer(lwg.LwGeom))
+	defer C.lwgeom_free(lwg.LwGeom)
 
-	newGeom := C.lwgeom_line_substring(lwg.LwGeom, C.double(from), C.double(to))
+	lwg.LwGeom = C.lwgeom_line_substring(lwg.LwGeom, C.double(from), C.double(to))
 
-	lwg.LwGeom = newGeom
 }
 
 // SetSRID sets the SRID of the geometry
@@ -75,8 +77,7 @@ func (lwg *LwGeom) GetSRID() int {
 
 // ToGEOS converts lwgeom to GEOS geometry
 func (lwg *LwGeom) ToGEOS() *GEOSGeom {
-	C.init_geos()
-	defer C.finishGEOS()
+
 	return GenerateGeosGeom(C.LWGEOM2GEOS(lwg.LwGeom, C.uchar(0)))
 }
 
@@ -86,8 +87,17 @@ You will have to use the WKT versions of SRS definition.
 references: https://epsg.io
 */
 func (lwg *LwGeom) Project(fromSRS string, toSRS string) {
-	from := C.lwproj_from_string(C.CString(fromSRS))
-	to := C.lwproj_from_string(C.CString(toSRS))
+	fromSrsCtype := C.CString(fromSRS)
+	defer C.free(unsafe.Pointer(fromSrsCtype))
+
+	toSrsCtype := C.CString(toSRS)
+	defer C.free(unsafe.Pointer(toSrsCtype))
+
+	from := C.lwproj_from_string(fromSrsCtype)
+	defer C.pj_free(from)
+
+	to := C.lwproj_from_string(toSrsCtype)
+	defer C.pj_free(to)
 
 	C.lwgeom_transform(lwg.LwGeom, from, to)
 }

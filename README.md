@@ -4,17 +4,17 @@
 [![codecov](https://codecov.io/gh/srimaln91/go-geos/branch/master/graph/badge.svg)](https://codecov.io/gh/srimaln91/go-geos)
 [![GoDoc](https://godoc.org/github.com/srimaln91/geos-go/geos?status.svg)](https://godoc.org/github.com/srimaln91/geos-go/geos)
 
-## Install geos library on Ubuntu
+## Install required libraries on Ubuntu
 
 ### Using package manager
 
 ```bash
 # Add ubuntugis repository
 sudo apt-add-repository -y ppa:ubuntugis/ubuntugis-unstable
-sudo apt-get install libgeos-dev libgeos-3.7.0
+sudo apt-get install libgeos-dev libgeos-3.7.0 liblwgeom-2.5-0 liblwgeom-dev libproj-dev
 ```
 
-### Compile from source
+### Compile GEOS from source
 
 You can download the source code from [https://trac.osgeo.org/geos/](https://trac.osgeo.org/geos/).
 
