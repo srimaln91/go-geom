@@ -50,16 +50,65 @@ sudo ldconfig
 ## Quick Start
 
 ```go
-import "github.com/srimaln91/geos-go/geos"
+import "github.com/srimaln91/geos-go/geom"
 
-geom := geos.FromWKT("POINT (0 0)")
-defer geom.Destroy()
+jsonLineString := `{
+    "type": "LineString",
+    "coordinates": [
+        [
+        79.86064910888672,
+        6.933669155327571
+        ],
+        [
+        79.87326622009277,
+        6.923529892606908
+        ],
+        [
+        79.87017631530762,
+        6.910237756030085
+        ],
+        [
+        79.88305091857909,
+        6.899671944935481
+        ],
+        [
+        79.89008903503418,
+        6.890724904396898
+        ],
+        [
+        79.89051818847656,
+        6.882118544176286
+        ],
+        [
+        79.8885440826416,
+        6.86976260575817
+        ],
+        [
+        79.87532615661621,
+        6.863541908333785
+        ]
+    ]
+}`
 
-//set SRID
-geom.SetSRID(4326)
+lwgeom := geom.FromGeoJSON(jsonLineString)
+lwgeom.SetSRID(4326)
 
-//Create a buffer around geometry (2 radians)
-geom.Buffer(2)
-wktString := geom.ToWKT()
+defer lwgeom.Free()
+
+lwgeom.LineSubstring(0.5, 0.9)
+
+fromSRS := SRS["EPSG:4326"]
+toSRS := SRS["EPSG:3857"]
+
+// Transform the geometry to SRS EPSG:3757 so we can measure from metres.
+lwgeom.Project(fromSRS, toSRS)
+lwgeom.Buffer(200)
+
+// Reset SRS to EPSG:4326
+lwgeom.Project(toSRS, fromSRS)
+
+bufJSON := lwgeom.ToGeoJSON(4, 0)
+
+fmt.println(bufJSON)
 
 ```
