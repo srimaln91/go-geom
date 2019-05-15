@@ -13,6 +13,7 @@ import (
 )
 
 import (
+	"errors"
 	"unsafe"
 )
 
@@ -30,7 +31,7 @@ var SRS = map[string]string{
 // LwGeomVersion the version number of liblwgeom
 func LwGeomVersion() string {
 	version := C.lwgeom_version()
-	
+
 	return C.GoString(version)
 }
 
@@ -120,4 +121,18 @@ func (lwg *Geom) Project(fromSRS string, toSRS string) {
 	defer C.pj_free(to)
 
 	C.lwgeom_transform(lwg.LwGeom, from, to)
+}
+
+// ClosestPoint returns the 2-dimensional point on g1 that is closest to g2. This is the first point of the shortest line.
+func (lwg *Geom) ClosestPoint(lwg2 *Geom) (*Geom, error) {
+
+	lwgeomPoint := C.closest_point(lwg.LwGeom, lwg2.LwGeom)
+
+	if lwgeomPoint == nil {
+		return nil, errors.New("Lwgeom Error")
+	}
+
+	return &Geom{
+		LwGeom: lwgeomPoint,
+	}, nil
 }

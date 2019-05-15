@@ -115,3 +115,31 @@ func TestGEOSVersion(t *testing.T) {
 		t.Error("Error: GEOSVersion()")
 	}
 }
+
+func TestClosestPoint(t *testing.T) {
+	geom1 := FromGeoJSON(JSONLinestring)
+	geom2 := FromGeoJSON(`{
+        "type": "Point",
+        "coordinates": [
+          79.92603331804276,
+          6.84914291895139
+        ]
+	  }`)
+
+	closestPoint, err := geom1.ClosestPoint(geom2)
+
+	if err != nil || closestPoint == nil {
+		t.Error("Error: ClosestPoint()")
+	}
+
+	geoJSON := closestPoint.ToGeoJSON(6, 0)
+
+	if geoJSON != `{"type":"Point","coordinates":[79.925546,6.848402]}` {
+		t.Error("Error: ClosestPoint()")
+	}
+
+	geom1.Free()
+	geom2.Free()
+	closestPoint.Free()
+
+}

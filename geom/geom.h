@@ -12,5 +12,6 @@ char *simplified_buffer_from_wkt(char *inwkt, double width, double tolerance);
 LWGEOM* lwgeom_line_substring(LWGEOM *ingeom, double from, double to);
 LWGEOM* buffer(LWGEOM* lwg, double width, int quadsegs);
 LWGEOM* buffer_with_params(LWGEOM* lwg, double width, GEOSBufferParams *buffer_params);
+LWGEOM * closest_point(LWGEOM *lwg1, LWGEOM *lwg2);
 
 #endif

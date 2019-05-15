@@ -288,3 +288,22 @@ buffer_with_params(LWGEOM *lwg, double width, GEOSBufferParams *buffer_params)
 
 	return buffered_lwgeom;
 }
+
+LWGEOM *
+closest_point(LWGEOM *lwg1, LWGEOM *lwg2)
+{
+	if (lwg1->srid != lwg2->srid)
+	{
+		return NULL;
+	}
+
+	LWGEOM *lwg_point;
+	lwg_point = lwgeom_closest_point(lwg1, lwg2);
+
+	if (lwgeom_is_empty(lwg_point))
+	{
+		return NULL;
+	}
+	
+	return lwg_point;
+}
