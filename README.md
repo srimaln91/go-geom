@@ -56,9 +56,16 @@ sudo ldconfig
 ## Quick Start
 
 ```go
-import "github.com/srimaln91/geos-go/geom"
+package main
 
-jsonLineString := `{
+import (
+	"fmt"
+	"github.com/srimaln91/go-geom/geom"
+)
+
+func main() {
+
+	jsonLineString := `{
     "type": "LineString",
     "coordinates": [
         [
@@ -96,25 +103,25 @@ jsonLineString := `{
     ]
 }`
 
-lwgeom := geom.FromGeoJSON(jsonLineString)
-lwgeom.SetSRID(4326)
+	lwgeom := geom.FromGeoJSON(jsonLineString)
+	lwgeom.SetSRID(4326)
 
-defer lwgeom.Free()
+	defer lwgeom.Free()
 
-lwgeom.LineSubstring(0.5, 0.9)
+	lwgeom.LineSubstring(0.5, 0.9)
 
-fromSRS := SRS["EPSG:4326"]
-toSRS := SRS["EPSG:3857"]
+	fromSRS := geom.SRS["EPSG:4326"]
+	toSRS := geom.SRS["EPSG:3857"]
 
-// Transform the geometry to SRS EPSG:3757 so we can measure from metres.
-lwgeom.Project(fromSRS, toSRS)
-lwgeom.Buffer(200)
+	// Transform the geometry to SRS EPSG:3757 so we can measure from metres.
+	lwgeom.Project(fromSRS, toSRS)
+	lwgeom.Buffer(200)
 
-// Reset SRS to EPSG:4326
-lwgeom.Project(toSRS, fromSRS)
+	// Reset SRS to EPSG:4326
+	lwgeom.Project(toSRS, fromSRS)
 
-bufJSON := lwgeom.ToGeoJSON(4, 0)
+	bufJSON := lwgeom.ToGeoJSON(4, 0)
 
-fmt.println(bufJSON)
-
+	fmt.Println(bufJSON)
+}
 ```
