@@ -288,3 +288,92 @@ buffer_with_params(LWGEOM *lwg, double width, GEOSBufferParams *buffer_params)
 
 	return buffered_lwgeom;
 }
+
+LWGEOM *
+closest_point(LWGEOM *lwg1, LWGEOM *lwg2)
+{
+	error_if_srid_mismatch(lwg1->srid, lwg2->srid);	
+
+	LWGEOM *lwg_point;
+	lwg_point = lwgeom_closest_point(lwg1, lwg2);
+
+	if (lwgeom_is_empty(lwg_point))
+	{
+		return NULL;
+	}
+	
+	return lwg_point;
+}
+
+LWGEOM *
+split(LWGEOM *lwg_in, LWGEOM *blade)
+{
+	LWGEOM *lwgeom_out;
+
+	error_if_srid_mismatch(lwg_in->srid, blade->srid);
+
+	lwgeom_out = lwgeom_split(lwg_in, blade);
+
+	if ( ! lwgeom_out )
+	{
+		return NULL;
+	}
+
+	return lwgeom_out;
+}
+
+LWGEOM *
+get_subgeom(LWGEOM *lwg, int index)
+{
+	LWGEOM *sub_geom;
+	LWCOLLECTION *collection;
+
+	if ( ! lwgeom_is_collection(lwg) )
+	{
+		lwerror("Input should be a geometry collection");
+		return NULL;
+	}
+
+	collection = lwgeom_as_lwcollection(lwg);
+	sub_geom = lwcollection_getsubgeom(collection, index);
+
+	if ( ! sub_geom )
+	{
+		return NULL;
+	}
+
+	return sub_geom;
+}
+
+double
+line_locate_point(LWGEOM *linestring, LWGEOM *point)
+{
+	LWLINE *lwline;
+	LWPOINT *lwpoint;
+	POINTARRAY *pa;
+	POINT4D p, p_proj;
+	double ret;
+
+	if ( linestring->type != LINETYPE )
+	{
+		lwerror("line_locate_point: 1st arg isn't a line");
+		return 0;
+	}
+	if ( point->type != POINTTYPE )
+	{
+		lwerror("line_locate_point: 2st arg isn't a point");
+		return 0;
+	}
+
+	error_if_srid_mismatch(linestring->srid, point->srid);
+
+	lwline = lwgeom_as_lwline(linestring);
+	lwpoint = lwgeom_as_lwpoint(point);
+
+	pa = lwline->points;
+	lwpoint_getPoint4d_p(lwpoint, &p);
+
+	ret = ptarray_locate_point(pa, &p, NULL, &p_proj);
+
+	return ret;
+}

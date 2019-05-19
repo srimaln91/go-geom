@@ -11,3 +11,4 @@ Todo
 06. Wrap GEOS coords enums. So we will be able to use coords to build geometries.
 07. Implement BufferWithOptions() method
 08. There is high overload in calling c/c++ functions via CGO. So we have to write some wrapper functions which combines multiple geos functions into a single function.
+09. Implement GetSRSByID()

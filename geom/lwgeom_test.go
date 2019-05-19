@@ -115,3 +115,93 @@ func TestGEOSVersion(t *testing.T) {
 		t.Error("Error: GEOSVersion()")
 	}
 }
+
+func TestClosestPoint(t *testing.T) {
+	geom1 := FromGeoJSON(JSONLinestring)
+	geom2 := FromGeoJSON(`{
+        "type": "Point",
+        "coordinates": [
+          79.92603331804276,
+          6.84914291895139
+        ]
+	  }`)
+
+	closestPoint, err := geom1.ClosestPoint(geom2)
+
+	if err != nil || closestPoint == nil {
+		t.Error("Error: ClosestPoint()")
+	}
+
+	geoJSON := closestPoint.ToGeoJSON(6, 0)
+
+	if geoJSON != `{"type":"Point","coordinates":[79.925546,6.848402]}` {
+		t.Error("Error: ClosestPoint()")
+	}
+
+	geom1.Free()
+	geom2.Free()
+	closestPoint.Free()
+
+}
+
+func TestSplit(t *testing.T) {
+	geom1 := FromGeoJSON(GetFileContents("../testdata/split/source.json"))
+	blade := FromGeoJSON(GetFileContents("../testdata/split/blade.json"))
+
+	// expectedResult := GetFileContents("../testdata/split/result.json")
+
+	collection, _ := geom1.Split(blade)
+
+	if collection == nil {
+		t.Error("Error: SplitAndSubGeom()")
+	}
+
+}
+
+func TestSubGeom(t *testing.T) {
+	geom1 := FromGeoJSON(GetFileContents("../testdata/split/source.json"))
+	geom1.SetSRID(4326)
+
+	blade := FromGeoJSON(GetFileContents("../testdata/split/blade.json"))
+	blade.SetSRID(4326)
+
+	expectedResult := FromGeoJSON(GetFileContents("../testdata/split/result.json"))
+
+	collection, _ := geom1.Split(blade)
+
+	selectedGeom, _ := collection.GetSubGeom(0)
+
+	if selectedGeom.ToGeoJSON(4, 0) != expectedResult.ToGeoJSON(4, 0) {
+		t.Error("Error: SplitAndSubGeom()")
+	}
+}
+
+func TestLwGeomEquals(t *testing.T) {
+	geom := FromGeoJSON(JSONLinestring)
+
+	if !geom.Equals(geom) {
+		t.Error("Error: Equals()")
+	}
+}
+
+func TestLineLocatePoint(t *testing.T) {
+	linestring := FromGeoJSON(JSONLinestring)
+	defer linestring.Free()
+
+	point := FromGeoJSON(`{
+        "type": "Point",
+        "coordinates": [
+          79.91254448890686,
+          6.856021573114641
+        ]
+	}`)
+	defer point.Free()
+
+	ret, err := linestring.LineLocatePoint(point)
+
+	if err != nil {
+		t.Error("Error: Equals()", err)
+	}
+
+	t.Log("Line locate point: ", ret)
+}
