@@ -136,3 +136,54 @@ func (lwg *Geom) ClosestPoint(lwg2 *Geom) (*Geom, error) {
 		LwGeom: lwgeomPoint,
 	}, nil
 }
+
+/*
+Split supports splitting a line by (multi)point, (multi)line or (multi)polygon boundary, a (multi)polygon by line.
+The returned geometry is always a collection.
+*/
+func (lwg *Geom) Split(blade *Geom) (*Geom, error) {
+	lwgeomOut := C.split(lwg.LwGeom, blade.LwGeom)
+
+	if lwgeomOut == nil {
+		return nil, errors.New("LWgeom Error")
+	}
+
+	return &Geom{
+		LwGeom: lwgeomOut,
+	}, nil
+}
+
+// GetSubGeom returns the subgeom from given index from a geometry collection
+func (lwg *Geom) GetSubGeom(index int) (*Geom, error) {
+	lwgeomOut := C.get_subgeom(lwg.LwGeom, C.int(index))
+
+	if lwgeomOut == nil {
+		return nil, errors.New("Lwgeom Error")
+	}
+
+	return &Geom{
+		LwGeom: lwgeomOut,
+	}, nil
+}
+
+// Equals returns true if a given geometry equals with another geometry
+func (lwg *Geom) Equals(g2 *Geom) bool {
+	isSame := C.lwgeom_same(lwg.LwGeom, g2.LwGeom)
+
+	return C.int(isSame) == 1
+}
+
+/*
+LineLocatePoint returns a float between 0 and 1 representing the location of the closest point on LineString
+to the given Point, as a fraction of total 2d line length.
+https://postgis.net/docs/manual-1.5/ST_Line_Locate_Point.html
+*/
+func (lwg *Geom) LineLocatePoint(point *Geom) (float64, error) {
+	ret := C.line_locate_point(lwg.LwGeom, point.LwGeom)
+
+	if ret == 0 {
+		return 0, errors.New("Invalid geometries")
+	}
+
+	return float64(ret), nil
+}

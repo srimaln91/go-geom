@@ -35,6 +35,15 @@ func TestMain(m *testing.M) {
 	os.Exit(exitCode)
 }
 
+func GetFileContents(path string) string {
+	fileBytes, err := ioutil.ReadFile(path)
+	if err != nil {
+		panic(err)
+	}
+
+	return string(fileBytes)
+}
+
 // Clear a set of Geoms from memory
 func cleanup(geoms ...*GEOSGeom) {
 	for _, geom := range geoms {
