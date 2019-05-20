@@ -39,3 +39,17 @@ func (lwg *Geom) BufferWithParams(params *BufferParams, width float64) error {
 
 	return nil
 }
+
+// Union returns the union of two geometries
+func (lwg *Geom) Union(g1 *Geom) (*Geom, error) {
+
+	union := C.geos_union(lwg.LwGeom, g1.LwGeom)
+
+	if union == nil {
+		return nil, errors.New("Error in union operation")
+	}
+
+	return &Geom{
+		LwGeom: union,
+	}, nil
+}

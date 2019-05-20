@@ -377,3 +377,42 @@ line_locate_point(LWGEOM *linestring, LWGEOM *point)
 
 	return ret;
 }
+
+LWGEOM *
+geos_union(LWGEOM *lwg1, LWGEOM *lwg2)
+{
+	GEOSGeometry *geos_geom1;
+	GEOSGeometry *geos_geom2;
+
+	GEOSGeometry *geos_union;
+	LWGEOM *lwgeom_union;
+
+	geos_geom1 = LWGEOM2GEOS(lwg1, 0);
+	geos_geom2 = LWGEOM2GEOS(lwg2, 0);
+
+	//create buffer
+	geos_union = GEOSUnion(geos_geom1, geos_geom2);
+
+	if (!geos_union)
+	{
+		return NULL;
+	}
+
+	GEOSGeom_destroy(geos_geom1);
+	GEOSGeom_destroy(geos_geom2);
+
+	if (lwgeom_has_srid(lwg1))
+	{
+		GEOSSetSRID(geos_union, lwgeom_get_srid(lwg1));
+	}
+
+	lwgeom_union = GEOS2LWGEOM(geos_union, 0);
+	if (!lwgeom_union)
+	{
+		return NULL;
+	}
+
+	GEOSGeom_destroy(geos_union);
+
+	return lwgeom_union;
+}

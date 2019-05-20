@@ -16,5 +16,6 @@ LWGEOM* closest_point(LWGEOM *lwg1, LWGEOM *lwg2);
 LWGEOM* split(LWGEOM *lwg_in, LWGEOM *blade);
 LWGEOM* get_subgeom(LWGEOM *lwg, int index);
 double line_locate_point(LWGEOM *linestring, LWGEOM *point);
+LWGEOM * geos_union(LWGEOM *lwg1, LWGEOM *lwg2);
 
 #endif
