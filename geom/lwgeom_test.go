@@ -274,3 +274,29 @@ func TestGEOSUnion(t *testing.T) {
 	lwgeom1.Free()
 	lwgeom2.Free()
 }
+
+func TestCreateFromWKT(t *testing.T) {
+	wkt := "LINESTRING(0 0,10 10)"
+	geom, err := CreateFromWKT(wkt)
+	defer geom.Free()
+
+	if err != nil {
+		t.Error("CreaeteFromWKT():", err)
+	}
+}
+
+func TestLwgeomToWKT(t *testing.T) {
+	wkt := "LINESTRIdfdNG(0 0,10 10)"
+	geom, err := CreateFromWKT(wkt)
+	defer geom.Free()
+
+	if err != nil {
+		t.Error("ToWKT():", err)
+	}
+
+	wktResult, _ := geom.ToWKT(0)
+
+	if string(wktResult) != wkt {
+		t.Error("Error: ToWKT()")
+	}
+}

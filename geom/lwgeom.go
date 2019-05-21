@@ -187,3 +187,32 @@ func (lwg *Geom) LineLocatePoint(point *Geom) (float64, error) {
 
 	return float64(ret), nil
 }
+
+// CreateFromWKT parse WKT and create a Geom object
+func CreateFromWKT(wkt string) (*Geom, error) {
+	cWkt := C.CString(wkt)
+	defer C.lwfree(unsafe.Pointer(cWkt))
+
+	lwgeom := C.lwgeom_from_wkt(cWkt, C.LW_PARSER_CHECK_NONE)
+
+	if lwgeom == nil {
+		return nil, errors.New("Error parsing WKT")
+	}
+
+	return &Geom{
+		LwGeom: lwgeom,
+	}, nil
+}
+
+// ToWKT returns a WKT string
+func (lwg *Geom) ToWKT(precision int) ([]byte, error) {
+
+	var size C.size_t
+	wkt := C.lwgeom_to_wkt(lwg.LwGeom, C.WKT_ISO, C.int(precision), &size)
+
+	if wkt == nil {
+		return nil, errors.New("Error creating WKT")
+	}
+
+	return []byte(C.GoString(wkt)), nil
+}
