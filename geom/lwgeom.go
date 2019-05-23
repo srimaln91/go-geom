@@ -216,3 +216,15 @@ func (lwg *Geom) ToWKT(precision int) ([]byte, error) {
 
 	return []byte(C.GoString(wkt)), nil
 }
+
+// Area returns the area of the geometry
+func (lwg *Geom) Area() (float64, error) {
+	area := C.lwgeom_area(lwg.LwGeom)
+	return float64(area), nil
+}
+
+// Length returns the length of the geometry
+func (lwg *Geom) Length() (float64, error) {
+	length := C.lwgeom_length(lwg.LwGeom)
+	return float64(length), nil
+}

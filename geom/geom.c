@@ -416,3 +416,252 @@ geos_union(LWGEOM *lwg1, LWGEOM *lwg2)
 
 	return lwgeom_union;
 }
+
+LWGEOM *
+geos_intersection(LWGEOM *lwg1, LWGEOM *lwg2)
+{
+	GEOSGeometry *geos_geom1;
+	GEOSGeometry *geos_geom2;
+
+	GEOSGeometry *geos_intersection;
+	LWGEOM *lwgeom_intersection;
+
+	geos_geom1 = LWGEOM2GEOS(lwg1, 0);
+	geos_geom2 = LWGEOM2GEOS(lwg2, 0);
+
+	//create buffer
+	geos_intersection = GEOSIntersection(geos_geom1, geos_geom2);
+
+	if (!geos_intersection)
+	{
+		return NULL;
+	}
+
+	GEOSGeom_destroy(geos_geom1);
+	GEOSGeom_destroy(geos_geom2);
+
+	if (lwgeom_has_srid(lwg1))
+	{
+		GEOSSetSRID(geos_intersection, lwgeom_get_srid(lwg1));
+	}
+
+	lwgeom_intersection = GEOS2LWGEOM(geos_intersection, 0);
+	if (!lwgeom_intersection)
+	{
+		return NULL;
+	}
+
+	GEOSGeom_destroy(geos_intersection);
+
+	return lwgeom_intersection;
+}
+
+// Binary predicate, returns 2 on exception, 1 on true, 0 on false
+char
+geos_intersects(LWGEOM *lwg1, LWGEOM *lwg2)
+{
+	GEOSGeometry *geos_geom1;
+	GEOSGeometry *geos_geom2;
+	char intersects;
+
+	geos_geom1 = LWGEOM2GEOS(lwg1, 0);
+	geos_geom2 = LWGEOM2GEOS(lwg2, 0);
+
+	//GEOSIntersects return 2 on exception, 1 on true, 0 on false
+	intersects = GEOSIntersects(geos_geom1, geos_geom2);
+
+	GEOSGeom_destroy(geos_geom1);
+	GEOSGeom_destroy(geos_geom2);
+
+	return intersects;
+}
+
+char
+geos_disjoints(LWGEOM *lwg1, LWGEOM *lwg2)
+{
+	GEOSGeometry *geos_geom1;
+	GEOSGeometry *geos_geom2;
+	char disjoints;
+
+	geos_geom1 = LWGEOM2GEOS(lwg1, 0);
+	geos_geom2 = LWGEOM2GEOS(lwg2, 0);
+
+	//GEOSIntersects return 2 on exception, 1 on true, 0 on false
+	disjoints = GEOSDisjoint(geos_geom1, geos_geom2);
+
+	GEOSGeom_destroy(geos_geom1);
+	GEOSGeom_destroy(geos_geom2);
+
+	return disjoints;
+}
+
+char
+geos_touches(LWGEOM *lwg1, LWGEOM *lwg2)
+{
+	GEOSGeometry *geos_geom1;
+	GEOSGeometry *geos_geom2;
+	char touches;
+
+	geos_geom1 = LWGEOM2GEOS(lwg1, 0);
+	geos_geom2 = LWGEOM2GEOS(lwg2, 0);
+
+	//GEOSIntersects return 2 on exception, 1 on true, 0 on false
+	touches = GEOSDisjoint(geos_geom1, geos_geom2);
+
+	GEOSGeom_destroy(geos_geom1);
+	GEOSGeom_destroy(geos_geom2);
+
+	return touches;
+}
+
+char
+geos_within(LWGEOM *lwg1, LWGEOM *lwg2)
+{
+	GEOSGeometry *geos_geom1;
+	GEOSGeometry *geos_geom2;
+	char within;
+
+	geos_geom1 = LWGEOM2GEOS(lwg1, 0);
+	geos_geom2 = LWGEOM2GEOS(lwg2, 0);
+
+	//GEOSIntersects return 2 on exception, 1 on true, 0 on false
+	within = GEOSWithin(geos_geom1, geos_geom2);
+
+	GEOSGeom_destroy(geos_geom1);
+	GEOSGeom_destroy(geos_geom2);
+
+	return within;
+}
+
+char
+geos_contains(LWGEOM *lwg1, LWGEOM *lwg2)
+{
+	GEOSGeometry *geos_geom1;
+	GEOSGeometry *geos_geom2;
+	char contains;
+
+	geos_geom1 = LWGEOM2GEOS(lwg1, 0);
+	geos_geom2 = LWGEOM2GEOS(lwg2, 0);
+
+	//GEOSIntersects return 2 on exception, 1 on true, 0 on false
+	contains = GEOSContains(geos_geom1, geos_geom2);
+
+	GEOSGeom_destroy(geos_geom1);
+	GEOSGeom_destroy(geos_geom2);
+
+	return contains;
+}
+
+char
+geos_overlaps(LWGEOM *lwg1, LWGEOM *lwg2)
+{
+	GEOSGeometry *geos_geom1;
+	GEOSGeometry *geos_geom2;
+	char overlaps;
+
+	geos_geom1 = LWGEOM2GEOS(lwg1, 0);
+	geos_geom2 = LWGEOM2GEOS(lwg2, 0);
+
+	//GEOSIntersects return 2 on exception, 1 on true, 0 on false
+	overlaps = GEOSOverlaps(geos_geom1, geos_geom2);
+
+	GEOSGeom_destroy(geos_geom1);
+	GEOSGeom_destroy(geos_geom2);
+
+	return overlaps;
+}
+
+char
+geos_equals(LWGEOM *lwg1, LWGEOM *lwg2)
+{
+	GEOSGeometry *geos_geom1;
+	GEOSGeometry *geos_geom2;
+	char equals;
+
+	geos_geom1 = LWGEOM2GEOS(lwg1, 0);
+	geos_geom2 = LWGEOM2GEOS(lwg2, 0);
+
+	//GEOSIntersects return 2 on exception, 1 on true, 0 on false
+	equals = GEOSEquals(geos_geom1, geos_geom2);
+
+	GEOSGeom_destroy(geos_geom1);
+	GEOSGeom_destroy(geos_geom2);
+
+	return equals;
+}
+
+char
+geos_equals_exact(LWGEOM *lwg1, LWGEOM *lwg2, double tolerance)
+{
+	GEOSGeometry *geos_geom1;
+	GEOSGeometry *geos_geom2;
+	char equals;
+
+	geos_geom1 = LWGEOM2GEOS(lwg1, 0);
+	geos_geom2 = LWGEOM2GEOS(lwg2, 0);
+
+	//GEOSIntersects return 2 on exception, 1 on true, 0 on false
+	equals = GEOSEqualsExact(geos_geom1, geos_geom2, tolerance);
+
+	GEOSGeom_destroy(geos_geom1);
+	GEOSGeom_destroy(geos_geom2);
+
+	return equals;
+}
+
+char
+geos_covers(LWGEOM *lwg1, LWGEOM *lwg2)
+{
+	GEOSGeometry *geos_geom1;
+	GEOSGeometry *geos_geom2;
+	char covers;
+
+	geos_geom1 = LWGEOM2GEOS(lwg1, 0);
+	geos_geom2 = LWGEOM2GEOS(lwg2, 0);
+
+	//GEOSIntersects return 2 on exception, 1 on true, 0 on false
+	covers = GEOSCovers(geos_geom1, geos_geom2);
+
+	GEOSGeom_destroy(geos_geom1);
+	GEOSGeom_destroy(geos_geom2);
+
+	return covers;
+}
+
+char
+geos_covered_by(LWGEOM *lwg1, LWGEOM *lwg2)
+{
+	GEOSGeometry *geos_geom1;
+	GEOSGeometry *geos_geom2;
+	char covered_by;
+
+	geos_geom1 = LWGEOM2GEOS(lwg1, 0);
+	geos_geom2 = LWGEOM2GEOS(lwg2, 0);
+
+	//GEOSIntersects return 2 on exception, 1 on true, 0 on false
+	covered_by = GEOSCoveredBy(geos_geom1, geos_geom2);
+
+	GEOSGeom_destroy(geos_geom1);
+	GEOSGeom_destroy(geos_geom2);
+
+	return covered_by;
+}
+
+char
+geos_crosses(LWGEOM *lwg1, LWGEOM *lwg2)
+{
+	GEOSGeometry *geos_geom1;
+	GEOSGeometry *geos_geom2;
+	char crosses;
+
+	geos_geom1 = LWGEOM2GEOS(lwg1, 0);
+	geos_geom2 = LWGEOM2GEOS(lwg2, 0);
+
+	//GEOSIntersects return 2 on exception, 1 on true, 0 on false
+	crosses = GEOSCrosses(geos_geom1, geos_geom2);
+
+	GEOSGeom_destroy(geos_geom1);
+	GEOSGeom_destroy(geos_geom2);
+
+	return crosses;
+}
