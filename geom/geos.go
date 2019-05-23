@@ -39,10 +39,10 @@ func Version() string {
 }
 
 // geosBoolResult evaluates C.char into boolean
-func geosBoolResult(char C.char) (bool, error) {
+func geosBoolResult(result C.char) (bool, error) {
 
 	// GEOS Binary predicates - return 2 on exception, 1 on true, 0 on false
-	switch C.int(char) {
+	switch result {
 	case 0:
 		return false, nil
 	case 1:

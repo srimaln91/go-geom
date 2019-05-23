@@ -6,9 +6,9 @@ The library is basically written as a wrapper around *liblwgeom* which comes wit
 - [liblwgeom](https://github.com/postgis/postgis/tree/svn-trunk/liblwgeom)
 - [proj.4](https://proj4.org/)
 
-[![Build Status](https://travis-ci.org/srimaln91/geos-go.svg?branch=master)](https://travis-ci.org/srimaln91/geos-go)
+[![Build Status](https://travis-ci.org/srimaln91/go-geom.svg?branch=master)](https://travis-ci.org/srimaln91/go-geom)
 [![codecov](https://codecov.io/gh/srimaln91/go-geos/branch/master/graph/badge.svg)](https://codecov.io/gh/srimaln91/go-geos)
-[![GoDoc](https://godoc.org/github.com/srimaln91/geos-go/geos?status.svg)](https://godoc.org/github.com/srimaln91/geos-go/geos)
+[![GoDoc](https://godoc.org/github.com/srimaln91/geos-go/geos?status.svg)](https://godoc.org/github.com/srimaln91/go-geom/geom)
 
 ## Install required libraries on Ubuntu
 
