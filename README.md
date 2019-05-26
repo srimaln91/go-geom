@@ -1,14 +1,16 @@
 # A Go library for geospatial operations
 
-The library is basically written as a wrapper around *liblwgeom* which comes with PostGIS. Liblegeom uses following libraries in order to perform geospatial calculations.
+The library is basically written as a wrapper around **liblwgeom** which comes with PostGIS. Liblwgeom uses following libraries in order to perform geospatial calculations.
 
 - [GEOS](https://geos.osgeo.org/)
 - [liblwgeom](https://github.com/postgis/postgis/tree/svn-trunk/liblwgeom)
 - [proj.4](https://proj4.org/)
 
+The library containes some extra functions which uses **libgeos** directly.
+
 [![Build Status](https://travis-ci.org/srimaln91/go-geom.svg?branch=master)](https://travis-ci.org/srimaln91/go-geom)
-[![codecov](https://codecov.io/gh/srimaln91/go-geos/branch/master/graph/badge.svg)](https://codecov.io/gh/srimaln91/go-geos)
-[![GoDoc](https://godoc.org/github.com/srimaln91/geos-go/geos?status.svg)](https://godoc.org/github.com/srimaln91/go-geom/geom)
+[![codecov](https://codecov.io/gh/srimaln91/go-geom/branch/master/graph/badge.svg)](https://codecov.io/gh/srimaln91/go-geos)
+[![GoDoc](https://godoc.org/github.com/srimaln91/go-geom/geos?status.svg)](https://godoc.org/github.com/srimaln91/go-geom/geom)
 
 ## Install required libraries on Ubuntu
 
