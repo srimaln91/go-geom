@@ -17,8 +17,7 @@ func (lwg *Geom) Buffer(width float64) error {
 	bufferedGeom := C.buffer(lwg.LwGeom, C.double(width), C.int(8))
 	defer C.lwgeom_free(lwg.LwGeom)
 
-	if bufferedGeom == nil { //Cleanup
-		// cleanup(geom1, geom2, geom3, geom4)
+	if bufferedGeom == nil {
 		return errors.New("Error creating Buffer")
 	}
 
@@ -73,7 +72,7 @@ func (lwg *Geom) Intersection(g1 *Geom) (*Geom, error) {
 func (lwg *Geom) Intersects(g1 *Geom) (bool, error) {
 	intersects := C.geos_intersects(lwg.LwGeom, g1.LwGeom)
 
-	if intersects == C.char(2) {
+	if C.GEOS_EXCEPTION == intersects {
 		return false, errors.New("Error in GEOS intersects operation")
 	}
 
@@ -88,7 +87,7 @@ Disjoint implies false for spatial intersection.
 func (lwg *Geom) Disjoints(g1 *Geom) (bool, error) {
 	disjoints := C.geos_disjoints(lwg.LwGeom, g1.LwGeom)
 
-	if disjoints == C.char(2) {
+	if C.GEOS_EXCEPTION == disjoints {
 		return false, errors.New("Error in GEOS disjoint operation")
 	}
 
@@ -99,7 +98,7 @@ func (lwg *Geom) Disjoints(g1 *Geom) (bool, error) {
 func (lwg *Geom) Touches(g1 *Geom) (bool, error) {
 	touches := C.geos_disjoints(lwg.LwGeom, g1.LwGeom)
 
-	if touches == C.char(2) {
+	if C.GEOS_EXCEPTION == touches {
 		return false, errors.New("Error in GEOS touches operation")
 	}
 
@@ -110,7 +109,7 @@ func (lwg *Geom) Touches(g1 *Geom) (bool, error) {
 func (lwg *Geom) Within(g1 *Geom) (bool, error) {
 	within := C.geos_within(lwg.LwGeom, g1.LwGeom)
 
-	if within == C.char(2) {
+	if C.GEOS_EXCEPTION == within {
 		return false, errors.New("Error in GEOS within operation")
 	}
 
@@ -121,7 +120,7 @@ func (lwg *Geom) Within(g1 *Geom) (bool, error) {
 func (lwg *Geom) Contains(g1 *Geom) (bool, error) {
 	contains := C.geos_contains(lwg.LwGeom, g1.LwGeom)
 
-	if contains == C.char(2) {
+	if C.GEOS_EXCEPTION == contains {
 		return false, errors.New("Error in GEOS contains operation")
 	}
 
@@ -132,7 +131,7 @@ func (lwg *Geom) Contains(g1 *Geom) (bool, error) {
 func (lwg *Geom) Overlaps(g1 *Geom) (bool, error) {
 	overlaps := C.geos_overlaps(lwg.LwGeom, g1.LwGeom)
 
-	if overlaps == C.char(2) {
+	if C.GEOS_EXCEPTION == overlaps {
 		return false, errors.New("Error in GEOS overlaps operation")
 	}
 
@@ -150,7 +149,7 @@ equals to Within & Contains
 func (lwg *Geom) GEOSEquals(g1 *Geom) (bool, error) {
 	equals := C.geos_equals(lwg.LwGeom, g1.LwGeom)
 
-	if equals == C.GEOS_EXCEPTION {
+	if C.GEOS_EXCEPTION == equals {
 		return false, errors.New("Error in GEOS equals operation")
 	}
 
