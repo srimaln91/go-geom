@@ -1,3 +1,3 @@
-module git.mytaxi.lk/pickme/geo/libs/go-geom
+module github.com/srimaln91/go-geom
 
 go 1.12
