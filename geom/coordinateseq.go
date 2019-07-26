@@ -6,7 +6,7 @@ package geom
 import "C"
 import "errors"
 
-// CoordinateSeq wraps C coordiante sequence
+// CoordinateSeq wraps C coordinate sequence
 type CoordinateSeq struct {
 	CSeq *C.GEOSCoordSequence
 }
@@ -78,7 +78,7 @@ func (cs *CoordinateSeq) GetZ(idx uint) float64 {
 	return float64(val)
 }
 
-// GetSize retuns the size of coordinate sequence
+// GetSize returns the size of coordinate sequence
 func (cs *CoordinateSeq) GetSize() uint {
 	var size C.uint
 

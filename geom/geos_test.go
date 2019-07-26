@@ -235,7 +235,7 @@ func TestUnion(t *testing.T) {
 		t.Errorf("Error: Invalid Buffer %s", resultWKT)
 	}
 
-	//Cleanup
+	// Cleanup
 	cleanup(geom1, geom2, union)
 }
 
@@ -253,7 +253,7 @@ func TestIntersection(t *testing.T) {
 		t.Errorf("Error: Invalid Intersection %s", resultWKT)
 	}
 
-	//Cleanup
+	// Cleanup
 	cleanup(geom1, geom2, intersection)
 }
 
@@ -267,7 +267,7 @@ func TestIntersects(t *testing.T) {
 		t.Errorf("Error: Intersects")
 	}
 
-	//Cleanup
+	// Cleanup
 	cleanup(geom1, geom2)
 
 }
@@ -290,7 +290,7 @@ func TestDisjoint(t *testing.T) {
 		t.Errorf("Error: Disjoint")
 	}
 
-	//Cleanup
+	// Cleanup
 	cleanup(geom1, geom2, geom3)
 }
 
@@ -312,7 +312,7 @@ func TestTouches(t *testing.T) {
 		t.Errorf("Error: Touches")
 	}
 
-	//Cleanup
+	// Cleanup
 	cleanup(geom1, geom2, geom3, geom4)
 }
 
@@ -334,7 +334,7 @@ func TestWithin(t *testing.T) {
 		t.Errorf("Error: Within")
 	}
 
-	//Cleanup
+	// Cleanup
 	cleanup(geom1, geom2, geom3)
 }
 
@@ -356,7 +356,7 @@ func TestContains(t *testing.T) {
 		t.Errorf("Error: Contains")
 	}
 
-	//Cleanup
+	// Cleanup
 	cleanup(geom1, geom2, geom3)
 }
 
@@ -377,7 +377,7 @@ func TestOverlaps(t *testing.T) {
 		t.Errorf("Error: Overlaps")
 	}
 
-	//Cleanup
+	// Cleanup
 	cleanup(geom1, geom2, geom3)
 }
 
@@ -511,9 +511,9 @@ func TestArea(t *testing.T) {
 func TestLength(t *testing.T) {
 	geom := FromWKT("LINESTRING(0 0, 0 1)")
 
-	len, _ := geom.Length()
+	l, _ := geom.Length()
 
-	if len != 1 {
+	if l != 1 {
 		t.Errorf("Error: Length()")
 
 	}
@@ -540,7 +540,7 @@ func TestNumPoints(t *testing.T) {
 		t.Errorf("Error: NumPoints()")
 	}
 
-	numPoints, err := geom2.NumPoints()
+	_, err := geom2.NumPoints()
 
 	if err == nil {
 		t.Errorf("Error: NumPoints()")

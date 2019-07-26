@@ -27,7 +27,7 @@ func (r *wktReader) read(wkt string) *GEOSGeom {
 
 func (w *wktWriter) write(g *GEOSGeom) string {
 
-	//Set output dimention (2 or 3)
+	//Set output dimension (2 or 3)
 	outputDimention := C.GEOSGeom_getCoordinateDimension(g.cGeom)
 	C.GEOSWKTWriter_setOutputDimension(w.c, outputDimention)
 
