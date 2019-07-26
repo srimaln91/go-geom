@@ -5,7 +5,7 @@ import (
 )
 
 func TestLwGeomBufferWithParams(t *testing.T) {
-	lwgeom := FromGeoJSON(string(JSONLinestring))
+	lwgeom := FromGeoJSON(JSONLinestring)
 	lwgeom.SetSRID(4326)
 	defer lwgeom.Free()
 
@@ -35,7 +35,7 @@ func TestLwGeomBufferWithParams(t *testing.T) {
 }
 
 func TestLwGeomBuffer(t *testing.T) {
-	lwgeom := FromGeoJSON(string(JSONLinestring))
+	lwgeom := FromGeoJSON(JSONLinestring)
 	lwgeom.SetSRID(4326)
 
 	defer lwgeom.Free()
