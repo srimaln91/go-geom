@@ -6,7 +6,7 @@ import (
 
 func TestGeomFromGeoJson(t *testing.T) {
 
-	geom := FromGeoJSON(JSONLinestring)
+	geom, _ := FromGeoJSON(JSONLinestring)
 
 	if geom == nil {
 		t.Error("Error: GeomFromGeoJson()")
@@ -17,8 +17,8 @@ func TestGeomFromGeoJson(t *testing.T) {
 
 func TestToGeoJson(t *testing.T) {
 
-	geom := FromGeoJSON(JSONLinestring)
-	jsonString := geom.ToGeoJSON(4, 0)
+	geom, _ := FromGeoJSON(JSONLinestring)
+	jsonString, _ := geom.ToGeoJSON(4, 0)
 
 	if jsonString == "" {
 		t.Error("Error: LwGeomToGeoJson()")
@@ -31,9 +31,9 @@ func TestLineSubstring(t *testing.T) {
 
 	expectedJSON := `{"type":"LineString","coordinates":[[79.9066,6.8597],[79.9073,6.859],[79.9076,6.8588],[79.9078,6.8585],[79.908,6.8582],[79.9083,6.858],[79.9084,6.8579],[79.9085,6.8578],[79.9088,6.8575],[79.9089,6.8573],[79.9089,6.8573]]}`
 
-	geom := FromGeoJSON(JSONLinestring)
+	geom, _ := FromGeoJSON(JSONLinestring)
 	geom.LineSubstring(0.5, 0.52)
-	resultJSON := geom.ToGeoJSON(4, 0)
+	resultJSON, _ := geom.ToGeoJSON(4, 0)
 
 	if resultJSON != expectedJSON {
 		t.Error("Error: LineSubstring()", resultJSON)
@@ -44,7 +44,7 @@ func TestLineSubstring(t *testing.T) {
 
 func TestToGEOS(t *testing.T) {
 
-	geom := FromGeoJSON(JSONLinestring)
+	geom, _ := FromGeoJSON(JSONLinestring)
 	geos := geom.ToGEOS()
 
 	coords, _ := geos.GetNumCoordinates()
@@ -74,7 +74,7 @@ func TestLwGeomFromGEOS(t *testing.T) {
 
 func TestProject(t *testing.T) {
 
-	geom := FromGeoJSON(JSONLinestring)
+	geom, _ := FromGeoJSON(JSONLinestring)
 	geom.SetSRID(4326)
 
 	fromSRS := SRS["EPSG:4326"]
@@ -117,8 +117,8 @@ func TestGEOSVersion(t *testing.T) {
 }
 
 func TestClosestPoint(t *testing.T) {
-	geom1 := FromGeoJSON(JSONLinestring)
-	geom2 := FromGeoJSON(`{
+	geom1, _ := FromGeoJSON(JSONLinestring)
+	geom2, _ := FromGeoJSON(`{
         "type": "Point",
         "coordinates": [
           79.92603331804276,
@@ -132,7 +132,7 @@ func TestClosestPoint(t *testing.T) {
 		t.Error("Error: ClosestPoint()")
 	}
 
-	geoJSON := closestPoint.ToGeoJSON(6, 0)
+	geoJSON, _ := closestPoint.ToGeoJSON(6, 0)
 
 	if geoJSON != `{"type":"Point","coordinates":[79.925546,6.848402]}` {
 		t.Error("Error: ClosestPoint()")
@@ -145,8 +145,8 @@ func TestClosestPoint(t *testing.T) {
 }
 
 func TestSplit(t *testing.T) {
-	geom1 := FromGeoJSON(GetFileContents("../testdata/split/source.json"))
-	blade := FromGeoJSON(GetFileContents("../testdata/split/blade.json"))
+	geom1, _ := FromGeoJSON(GetFileContents("../testdata/split/source.json"))
+	blade, _ := FromGeoJSON(GetFileContents("../testdata/split/blade.json"))
 
 	// expectedResult := GetFileContents("../testdata/split/result.json")
 
@@ -159,25 +159,27 @@ func TestSplit(t *testing.T) {
 }
 
 func TestSubGeom(t *testing.T) {
-	geom1 := FromGeoJSON(GetFileContents("../testdata/split/source.json"))
+	geom1, _ := FromGeoJSON(GetFileContents("../testdata/split/source.json"))
 	geom1.SetSRID(4326)
 
-	blade := FromGeoJSON(GetFileContents("../testdata/split/blade.json"))
+	blade, _ := FromGeoJSON(GetFileContents("../testdata/split/blade.json"))
 	blade.SetSRID(4326)
 
-	expectedResult := FromGeoJSON(GetFileContents("../testdata/split/result.json"))
+	expectedResult, _ := FromGeoJSON(GetFileContents("../testdata/split/result.json"))
 
 	collection, _ := geom1.Split(blade)
 
 	selectedGeom, _ := collection.GetSubGeom(0)
 
-	if selectedGeom.ToGeoJSON(4, 0) != expectedResult.ToGeoJSON(4, 0) {
+	expResultJSON, _ := expectedResult.ToGeoJSON(4, 0)
+	selectedGeomJSON, _ := selectedGeom.ToGeoJSON(4, 0)
+	if  selectedGeomJSON != expResultJSON  {
 		t.Error("Error: SplitAndSubGeom()")
 	}
 }
 
 func TestLwGeomEquals(t *testing.T) {
-	geom := FromGeoJSON(JSONLinestring)
+	geom, _ := FromGeoJSON(JSONLinestring)
 
 	if !geom.Equals(geom) {
 		t.Error("Error: Equals()")
@@ -185,10 +187,10 @@ func TestLwGeomEquals(t *testing.T) {
 }
 
 func TestLineLocatePoint(t *testing.T) {
-	linestring := FromGeoJSON(JSONLinestring)
+	linestring, _ := FromGeoJSON(JSONLinestring)
 	defer linestring.Free()
 
-	point := FromGeoJSON(`{
+	point, _ := FromGeoJSON(`{
         "type": "Point",
         "coordinates": [
           79.91254448890686,
@@ -208,7 +210,7 @@ func TestLineLocatePoint(t *testing.T) {
 
 func TestGEOSUnion(t *testing.T) {
 
-	lwgeom1 := FromGeoJSON(`{
+	lwgeom1, _ := FromGeoJSON(`{
         "type": "Polygon",
         "coordinates": [
           [
@@ -237,7 +239,7 @@ func TestGEOSUnion(t *testing.T) {
       }
 	`)
 
-	lwgeom2 := FromGeoJSON(`{
+	lwgeom2, _ := FromGeoJSON(`{
         "type": "Polygon",
         "coordinates": [
           [
