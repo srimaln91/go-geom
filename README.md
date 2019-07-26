@@ -82,7 +82,6 @@ func main() {
     }`
 
     lwgeom, err := geom.FromGeoJSON(jsonLineString)
-    
     if err != nil {
         fmt.Println(err)
         return
@@ -108,6 +107,7 @@ func main() {
         fmt.Println(err)
         return
     }
+    
 	fmt.Println(bufJSON)
 }
 ```
