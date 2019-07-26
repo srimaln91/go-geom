@@ -105,9 +105,13 @@ func main() {
     ]
 }`
 
-	lwgeom := geom.FromGeoJSON(jsonLineString)
-	lwgeom.SetSRID(4326)
+    lwgeom, err := geom.FromGeoJSON(jsonLineString)
+    
+    if err != nil {
+        panic(err)
+    }
 
+	lwgeom.SetSRID(4326)
 	defer lwgeom.Free()
 
 	lwgeom.LineSubstring(0.5, 0.9)
@@ -122,8 +126,10 @@ func main() {
 	// Reset SRS to EPSG:4326
 	lwgeom.Project(toSRS, fromSRS)
 
-	bufJSON := lwgeom.ToGeoJSON(4, 0)
-
+	bufJSON, err := lwgeom.ToGeoJSON(4, 0)
+    if err != nil {
+        panic(err)
+    }
 	fmt.Println(bufJSON)
 }
 ```

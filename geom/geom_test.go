@@ -5,7 +5,7 @@ import (
 )
 
 func TestLwGeomBufferWithParams(t *testing.T) {
-	lwgeom := FromGeoJSON(JSONLinestring)
+	lwgeom, _ := FromGeoJSON(JSONLinestring)
 	lwgeom.SetSRID(4326)
 	defer lwgeom.Free()
 
@@ -27,7 +27,7 @@ func TestLwGeomBufferWithParams(t *testing.T) {
 
 	lwgeom.Project(toSRS, fromSRS)
 
-	bufJSON := lwgeom.ToGeoJSON(4, 0)
+	bufJSON, _ := lwgeom.ToGeoJSON(4, 0)
 
 	if bufJSON == "" {
 		t.Error("Error: BufferWithParams()")
@@ -35,7 +35,7 @@ func TestLwGeomBufferWithParams(t *testing.T) {
 }
 
 func TestLwGeomBuffer(t *testing.T) {
-	lwgeom := FromGeoJSON(JSONLinestring)
+	lwgeom, _ := FromGeoJSON(JSONLinestring)
 	lwgeom.SetSRID(4326)
 
 	defer lwgeom.Free()
@@ -49,7 +49,7 @@ func TestLwGeomBuffer(t *testing.T) {
 	lwgeom.Buffer(200)
 	lwgeom.Project(toSRS, fromSRS)
 
-	bufJSON := lwgeom.ToGeoJSON(4, 0)
+	bufJSON, _ := lwgeom.ToGeoJSON(4, 0)
 
 	if bufJSON == "" {
 		t.Error("Error: Buffer()")

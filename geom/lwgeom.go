@@ -43,15 +43,19 @@ func GEOSVersion() string {
 }
 
 // FromGeoJSON creates lwgeom from GeoJson
-func FromGeoJSON(geojson string) *Geom {
+func FromGeoJSON(geojson string) (*Geom, error) {
 
 	geojsonCstring := C.CString(geojson)
-	lwgeom := C.lwgeom_from_geojson(geojsonCstring, &C.cnull)
 	defer C.lwfree(unsafe.Pointer(geojsonCstring))
+
+	lwgeom := C.lwgeom_from_geojson(geojsonCstring, &C.cnull)
+	if lwgeom == nil {
+		return nil, errors.New("Lwgeom exception on lwgeom_from_geojson")
+	}
 
 	return &Geom{
 		LwGeom: lwgeom,
-	}
+	}, nil
 }
 
 // LwGeomFromGEOS convert GEOS geometry to lwgeom
@@ -70,11 +74,15 @@ func (lwg *Geom) Free() {
 }
 
 // ToGeoJSON generates geojson from lwgeom
-func (lwg *Geom) ToGeoJSON(precisoin int, hasBbox int) string {
+func (lwg *Geom) ToGeoJSON(precisoin int, hasBbox int) (string, error) {
 
 	geojson := C.lwgeom_to_geojson(lwg.LwGeom, C.cnull, C.int(precisoin), C.int(hasBbox))
+	if geojson == nil {
+		return "", errors.New("Lwgeom exception on lwgeom_to_geojson")
+	}
 	defer C.lwfree(unsafe.Pointer(geojson))
-	return C.GoString(geojson)
+
+	return C.GoString(geojson), nil
 }
 
 // LineSubstring returns a part of the linestring
