@@ -10,6 +10,7 @@ The library containes some extra functions which uses **libgeos** directly.
 
 [![Build Status](https://travis-ci.org/srimaln91/go-geom.svg?branch=master)](https://travis-ci.org/srimaln91/go-geom)
 [![codecov](https://codecov.io/gh/srimaln91/go-geom/branch/master/graph/badge.svg)](https://codecov.io/gh/srimaln91/go-geom)
+[![Go Report Card](https://goreportcard.com/badge/github.com/srimaln91/go-geom)](https://goreportcard.com/report/github.com/srimaln91/go-geom)
 [![GoDoc](https://godoc.org/github.com/srimaln91/go-geom/geos?status.svg)](https://godoc.org/github.com/srimaln91/go-geom/geom)
 
 ## Install required libraries on Ubuntu
